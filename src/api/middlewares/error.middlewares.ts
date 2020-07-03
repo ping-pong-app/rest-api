@@ -1,0 +1,42 @@
+import { NextFunction, Request, Response, Router } from "express";
+import { BaseError, Http404Error } from "../../lib";
+import { ErrorWithCode } from "../../config";
+
+
+export const handle404Error = (router: Router) => {
+    router.use((req: Request, res: Response) => {
+        throw new Http404Error("Path not found!");
+    });
+};
+
+export const handleCustomError = (router: Router) => {
+    router.use((err: ErrorWithCode, req: Request, res: Response, next: NextFunction) => {
+        if (err instanceof BaseError) {
+            res.status(err.statusCode).json({
+                status: err.statusCode,
+                message: err.message,
+                type: err.name
+            });
+        } else {
+            next(err);
+        }
+    });
+};
+
+export const handleUnknownError = (router: Router) => {
+    router.use((err: ErrorWithCode, req: Request, res: Response, next: NextFunction) => {
+        console.error(err);
+        if (process.env.NODE_ENV === "production") {
+            res.status(500).json({
+                status: 500,
+                message: err.message
+            });
+        } else {
+            res.status(500).json({
+                status: 500,
+                message: err.message,
+                stack: err.stack
+            });
+        }
+    });
+};

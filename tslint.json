@@ -1,0 +1,57 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rulesDirectory": [],
+    "rules": {
+        "indent": [
+            true,
+            "spaces",
+            4
+        ],
+        "semicolon": [
+            true,
+            "always"
+        ],
+        "quotemark": [
+            true,
+            "double"
+        ],
+        "no-trailing-whitespace": false,
+        "ordered-imports": false,
+        "object-literal-sort-keys": false,
+        "jsx-no-multiline-js": false,
+        "interface-name": false,
+        "no-duplicate-imports": false,
+        "whitespace": [
+            true,
+            "check-module"
+        ],
+        "trailing-comma": false,
+        "member-ordering": false,
+        "arrow-parens": [
+            true,
+            "ban-single-arg-parens"
+        ],
+        "jsx-alignment": false,
+        "jsx-no-lambda": false,
+        "no-console": [
+            true,
+            "debug",
+            "info",
+            "time",
+            "timeEnd",
+            "trace"
+        ],
+        "max-line-length": [
+            true,
+            {
+                "limit": 160
+            }
+        ],
+        "max-classes-per-file": false,
+        "object-literal-key-quotes": false
+    }
+}

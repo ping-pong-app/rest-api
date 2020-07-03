@@ -1,0 +1,38 @@
+{
+    "name": "ping-api",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "tsc-watch --onSuccess \"node ./dist/server.js\"",
+        "build": "tsc"
+    },
+    "keywords": [],
+    "author": "Miha Jamsek <miha_jamsek@windowslive.com> (https://github.com/Jamsek-m)",
+    "license": "ISC",
+    "dependencies": {
+        "axios": "~0.19.2",
+        "compression": "~1.7.4",
+        "cookie-parser": "~1.4.5",
+        "cors": "~2.8.5",
+        "express": "~4.17.1",
+        "express-async-errors": "~3.1.1",
+        "helmet": "~3.23.3",
+        "pg": "~8.2.1",
+        "pg-hstore": "~2.3.3",
+        "reflect-metadata": "~0.1.13",
+        "typeorm": "~0.2.25"
+    },
+    "devDependencies": {
+        "@types/axios": "~0.14.0",
+        "@types/compression": "^1.7.0",
+        "@types/cookie-parser": "^1.4.2",
+        "@types/cors": "^2.8.6",
+        "@types/express": "^4.17.6",
+        "@types/helmet": "^0.0.47",
+        "@types/node": "^14.0.14",
+        "tslint": "^6.1.2",
+        "typescript": "^3.9.6",
+        "tsc-watch": "^4.2.9"
+    }
+}
