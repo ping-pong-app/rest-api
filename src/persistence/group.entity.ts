@@ -4,7 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 export class GroupEntity {
     
     @PrimaryGeneratedColumn("uuid")
-    public id: string;
+    public id?: string;
     
     @Column({nullable: false})
     public name: string;
