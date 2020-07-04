@@ -21,6 +21,11 @@ ENV APP_DB_PORT=5432
 ENV APP_DB_USER=postgres
 ENV APP_DB_PASSWORD=postgres
 
+ENV APP_AUTH_SERVER_URL=https://keycloak.mjamsek.com/auth
+ENV APP_AUTH_REALM=ping
+ENV APP_AUTH_CLIENT_ID=ping-api
+ENV APP_AUTH_CLIENT_SECRET=not_set
+
 EXPOSE 3000
 
 CMD ["node", "dist/server.js"]
