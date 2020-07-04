@@ -1,0 +1,341 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Ping API",
+        "description": "API for Ping application",
+        "contact": {
+            "name": "Miha Jamsek",
+            "url": "https://github.com/Jamsek-m"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000/v1"
+        }
+    ],
+    "paths": {
+        "/groups": {
+            "get": {
+                "tags": [
+                    "group"
+                ],
+                "summary": "Returns list of groups",
+                "description": "Retrieves paginated list of groups.",
+                "operationId": "findAllGroups",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "default": 0
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns list",
+                        "headers": {
+                            "X-Total-Count": {
+                                "description": "Count of all entities",
+                                "schema": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Group"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "group"
+                ],
+                "summary": "Creates group",
+                "description": "Creates group and returns created entity.",
+                "operationId": "createGroup",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Group"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Group created",
+                        "headers": {
+                            "Location": {
+                                "description": "Path to created group",
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Group"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{id}": {
+            "get": {
+                "tags": ["group"],
+                "summary": "Returns group",
+                "description": "Retrieves group by given id",
+                "operationId": "getOneGroup",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns group",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Group"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Group not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["group"],
+                "summary": "Deletes group",
+                "description": "Deletes group with given id",
+                "operationId": "deleteGroup",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Group deleted"
+                    },
+                    "404": {
+                        "description": "Group not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/health/live": {
+            "get": {
+                "tags": ["health"],
+                "summary": "Liveness check",
+                "description": "Endpoint for liveness check",
+                "operationId": "livenessHealth",
+                "servers": [
+                    {
+                        "url": "http://localhost:3000"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Service is live",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HealthcheckReport"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Service is not live",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HealthcheckReport"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/health/ready": {
+            "get": {
+                "tags": ["health"],
+                "summary": "Readiness check",
+                "description": "Endpoint for readiness check",
+                "operationId": "readinessHealth",
+                "servers": [
+                    {
+                        "url": "http://localhost:3000"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Service is ready",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HealthcheckReport"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Service is not ready",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HealthcheckReport"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Group": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string",
+                        "nullable": false
+                    },
+                    "ownerId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "HealthCheck": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "UP",
+                            "DOWN"
+                        ]
+                    }
+                }
+            },
+            "HealthcheckReport": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "UP",
+                            "DOWN"
+                        ]
+                    },
+                    "checks": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/HealthCheck"
+                        }
+                    }
+                }
+            },
+            "Error": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "number"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ValidationError": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Error"
+                    }
+                ],
+                "properties": {
+                    "entity": {
+                        "type": "string"
+                    },
+                    "fieldName": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
