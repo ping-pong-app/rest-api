@@ -4,7 +4,7 @@ import { ErrorWithCode } from "../../config";
 
 
 export const handle404Error = (router: Router) => {
-    router.use((req: Request, res: Response) => {
+    router.use((_: Request, __: Response) => {
         throw new Http404Error("Path not found!");
     });
 };
@@ -41,7 +41,7 @@ export const handleCustomError = (router: Router) => {
 };
 
 export const handleUnknownError = (router: Router) => {
-    router.use((err: ErrorWithCode, req: Request, res: Response, next: NextFunction) => {
+    router.use((err: ErrorWithCode, req: Request, res: Response, _: NextFunction) => {
         console.error(err);
         if (process.env.NODE_ENV === "production") {
             res.status(500).json({

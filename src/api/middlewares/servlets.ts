@@ -5,7 +5,7 @@ import swagger from "../docs/openapi.json";
 
 
 export const SwaggerServlet = (router: Router) => {
-    router.use("/openapi/json", (req: Request, res: Response, next: NextFunction) => {
+    router.use("/openapi/json", (req: Request, res: Response, _: NextFunction) => {
         res.sendFile(join(__dirname, "..", "docs/openapi.json"));
     });
 };
