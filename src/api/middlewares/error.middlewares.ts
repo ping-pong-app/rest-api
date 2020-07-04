@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { BaseError, Http404Error } from "../../lib";
+import { BaseError, Http404Error, ValidationError } from "../../lib";
 import { ErrorWithCode } from "../../config";
 
 
@@ -12,11 +12,28 @@ export const handle404Error = (router: Router) => {
 export const handleCustomError = (router: Router) => {
     router.use((err: ErrorWithCode, req: Request, res: Response, next: NextFunction) => {
         if (err instanceof BaseError) {
-            res.status(err.statusCode).json({
-                status: err.statusCode,
-                message: err.message,
-                type: err.name
-            });
+            
+            if (err instanceof ValidationError) {
+                const validationBody: any = {
+                    status: err.statusCode,
+                    message: err.message,
+                    type: err.name
+                };
+                if (err.fieldName) {
+                    validationBody.fieldName = err.fieldName;
+                }
+                if (err.entity) {
+                    validationBody.entity = err.entity;
+                }
+                res.status(err.statusCode).json(validationBody);
+            } else {
+                res.status(err.statusCode).json({
+                    status: err.statusCode,
+                    message: err.message,
+                    type: err.name
+                });
+            }
+            
         } else {
             next(err);
         }

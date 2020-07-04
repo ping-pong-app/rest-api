@@ -1,5 +1,5 @@
 import { Route } from "../../config";
-import { getGroup, getGroups } from "../resources/groups.resources";
+import { createGroup, deleteGroup, getGroup, getGroups } from "../resources/groups.resources";
 
 export const routes: Route[] = [
     {
@@ -14,6 +14,20 @@ export const routes: Route[] = [
         method: "get",
         handler: [
             getGroup
+        ]
+    },
+    {
+        path: "/v1/groups",
+        method: "post",
+        handler: [
+            createGroup
+        ]
+    },
+    {
+        path: "/v1/groups/:id",
+        method: "delete",
+        handler: [
+            deleteGroup
         ]
     }
 ];

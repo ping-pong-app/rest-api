@@ -33,6 +33,7 @@ export class TestService {
         await repository
             .createQueryBuilder()
             .delete()
+            .from(GroupEntity)
             .execute();
     }
     
