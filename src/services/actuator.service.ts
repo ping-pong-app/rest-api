@@ -1,6 +1,7 @@
 import axios from "axios";
 import { HealthCheck, HealthcheckReport } from "../lib";
 import { PersistenceManager } from "../config";
+import { AuthConfigurator } from "../config/auth.config";
 
 
 export class ActuatorService {
@@ -34,9 +35,11 @@ export class ActuatorService {
     private static async keycloakCheck(): Promise<HealthCheck> {
         const check = new HealthCheck("KeycloakHealthCheck");
         try {
-            await axios.get("https://keycloak.mjamsek.com", {method: "GET"});
+            const keycloakUrl = AuthConfigurator.getConfiguration().authServerUrl;
+            await axios.get(keycloakUrl, {method: "GET"});
             check.up();
         } catch (e) {
+            console.log(e);
             check.down();
         }
         return check;

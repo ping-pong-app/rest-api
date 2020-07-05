@@ -15,7 +15,7 @@ export class AuthConfigurator {
         } = process.env;
         
         AuthConfigurator.configuration = {
-            authServerUrl: APP_AUTH_SERVER_URL || "",
+            authServerUrl: APP_AUTH_SERVER_URL || "https://keycloak.mjamsek.com/auth",
             realm: APP_AUTH_REALM || "",
             clientId: APP_AUTH_CLIENT_ID || "",
             clientSecret: APP_AUTH_CLIENT_SECRET
