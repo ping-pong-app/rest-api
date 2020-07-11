@@ -6,7 +6,10 @@ import { AuthConfigurator } from "./auth.config";
 
 export const initConfiguration = async () => {
     await PersistenceManager.connect();
-    await AuthConfigurator.configure();
+};
+
+export const applyAuthentication = (router: Router) => {
+    AuthConfigurator.configure(router);
 };
 
 export const applyMiddleware = (setupFunctions: MiddlewareSetupFunction[], router: Router) => {

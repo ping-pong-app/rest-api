@@ -1,11 +1,13 @@
 import { Route } from "../../config";
 import { createGroup, deleteGroup, getGroup, getGroups } from "../resources/groups.resources";
+import { AuthConfigurator } from "../../config/auth.config";
 
 export const routes: Route[] = [
     {
         path: "/v1/groups",
         method: "get",
         handler: [
+            AuthConfigurator.getInstance().protect(),
             getGroups
         ]
     },
