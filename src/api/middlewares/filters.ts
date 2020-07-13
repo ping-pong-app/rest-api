@@ -15,4 +15,5 @@ export const propagateTokenPayload = async (req: Request, res: Response, next: N
     if (token) {
         res.locals.jwt = token;
     }
+    next();
 };
