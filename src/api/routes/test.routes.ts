@@ -1,5 +1,5 @@
 import { Route } from "../../config";
-import { developmentModeFilter } from "../middlewares/filters";
+import { developmentModeFilter } from "../middlewares";
 import { emptyData, fillInitialData } from "../resources/test.resources";
 
 export const routes: Route[] = [

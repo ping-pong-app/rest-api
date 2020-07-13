@@ -7,8 +7,12 @@ import {
     handleCors
 } from "./common.middlewares";
 import { handle404Error, handleCustomError, handleUnknownError } from "./error.middlewares";
-import { SwaggerServlet, SwaggerUIServlet } from "./servlets";
+import {
+    SwaggerServlet,
+    SwaggerUIServlet,
+} from "./servlets";
 
+export { developmentModeFilter, propagateTokenPayload } from "./filters";
 
 export const middlewares: MiddlewareSetupFunction[] = [
     handleCors,
@@ -17,7 +21,7 @@ export const middlewares: MiddlewareSetupFunction[] = [
     handleCompression,
     handleCookieParsing,
     SwaggerServlet,
-    SwaggerUIServlet
+    SwaggerUIServlet,
 ];
 
 export const errorMiddlewares: MiddlewareSetupFunction[] = [

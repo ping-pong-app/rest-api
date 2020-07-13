@@ -20,3 +20,24 @@ export type AuthConfiguration = {
     clientId: string;
     clientSecret?: string;
 };
+
+export interface JsonWebToken {
+    sub: string;
+    exp: Date;
+    iss: string;
+    azp: string;
+    scope: string;
+    email_verified: boolean;
+    name: string;
+    preferred_username: string;
+    given_name: string;
+    family_name: string;
+    realm_access: {
+        roles: string[];
+    };
+    resource_access: {
+        [key: string]: {
+            roles: string[];
+        }
+    };
+}

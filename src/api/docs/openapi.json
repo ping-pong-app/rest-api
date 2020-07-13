@@ -14,6 +14,11 @@
             "url": "http://localhost:3000/v1"
         }
     ],
+    "security": [
+        {
+            "Keycloak": []
+        }
+    ],
     "paths": {
         "/groups": {
             "get": {
@@ -196,6 +201,7 @@
                         "url": "http://localhost:3000"
                     }
                 ],
+                "security": [],
                 "responses": {
                     "200": {
                         "description": "Service is live",
@@ -231,6 +237,7 @@
                         "url": "http://localhost:3000"
                     }
                 ],
+                "security": [],
                 "responses": {
                     "200": {
                         "description": "Service is ready",
@@ -257,6 +264,20 @@
         }
     },
     "components": {
+        "securitySchemes": {
+            "Keycloak": {
+                "type": "oauth2",
+                "description": "Get credentials from Keycloak server.",
+                "flows": {
+                    "implicit": {
+                        "authorizationUrl": "https://keycloak.mjamsek.com/auth/realms/ping-pong/protocol/openid-connect/auth?client_id=ping-public",
+                        "scopes": {
+
+                        }
+                    }
+                }
+            }
+        },
         "schemas": {
             "Group": {
                 "type": "object",

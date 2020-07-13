@@ -5,11 +5,11 @@ import { GroupEntity } from "../persistence";
 const testGroups: GroupEntity[] = [
     {
         name: "3. stuk",
-        ownerId: "1"
+        ownerId: "c184bb71-8ba1-45d7-90d9-38aa88f06dc2"
     },
     {
         name: "klapa",
-        ownerId: "2"
+        ownerId: "c184bb71-8ba1-45d7-90d9-38aa88f06dc2"
     }
 ];
 

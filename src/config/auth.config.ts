@@ -1,5 +1,5 @@
-import { AuthConfiguration } from "./common.models";
-import { Router } from "express";
+import { AuthConfiguration, JsonWebToken } from "./common.models";
+import { Request, Router } from "express";
 import KeycloakClass, { Keycloak } from "keycloak-connect";
 
 
@@ -43,6 +43,38 @@ export class AuthConfigurator {
     
     public static getInstance(): Keycloak {
         return AuthConfigurator.instance;
+    }
+    
+    public static getToken(req: Request): string | null {
+        const authHeader = req.header("Authorization");
+        if (authHeader) {
+            if (authHeader.startsWith("Bearer")) {
+                return authHeader.replace("Bearer ", "");
+            }
+            return authHeader;
+        }
+        return null;
+    }
+    
+    public static decodeToken<T extends JsonWebToken>(token: string): T | null {
+        if (!token) {
+            return null;
+        }
+        const base64EncodedParts = token.split(".");
+        if (base64EncodedParts.length > 1) {
+            const base64Payload = base64EncodedParts[1];
+            const decoded = Buffer.from(base64Payload, "base64").toString();
+            return JSON.parse(decoded);
+        }
+        return null;
+    }
+    
+    public static getDecodedToken<T extends JsonWebToken>(request: Request): T | null {
+        const token = AuthConfigurator.getToken(request);
+        if (token) {
+            return AuthConfigurator.decodeToken(token);
+        }
+        return null;
     }
     
 }
