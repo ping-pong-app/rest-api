@@ -11,7 +11,12 @@
     },
     "servers": [
         {
-            "url": "http://localhost:3000/v1"
+            "url": "http://localhost:3000/v1",
+            "description": "Local development environment"
+        },
+        {
+            "url": "http://test.mjamsek.com/v1",
+            "description": "Stage testing environment"
         }
     ],
     "security": [
@@ -198,7 +203,12 @@
                 "operationId": "livenessHealth",
                 "servers": [
                     {
-                        "url": "http://localhost:3000"
+                        "url": "http://localhost:3000",
+                        "description": "Local development environment"
+                    },
+                    {
+                        "url": "http://test.mjamsek.com",
+                        "description": "Stage testing environment"
                     }
                 ],
                 "security": [],
@@ -234,7 +244,12 @@
                 "operationId": "readinessHealth",
                 "servers": [
                     {
-                        "url": "http://localhost:3000"
+                        "url": "http://localhost:3000",
+                        "description": "Local development environment"
+                    },
+                    {
+                        "url": "http://test.mjamsek.com",
+                        "description": "Stage testing environment"
                     }
                 ],
                 "security": [],
