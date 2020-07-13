@@ -22,7 +22,7 @@ ENV APP_DB_USER=postgres
 ENV APP_DB_PASSWORD=postgres
 
 ENV APP_AUTH_SERVER_URL=https://keycloak.mjamsek.com/auth
-ENV APP_AUTH_REALM=ping-popng
+ENV APP_AUTH_REALM=ping-pong
 ENV APP_AUTH_CLIENT_ID=ping-api
 ENV APP_AUTH_CLIENT_SECRET=not_set
 
