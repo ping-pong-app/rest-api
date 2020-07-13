@@ -12,16 +12,16 @@ export class AuthConfigurator {
     public static configure(router: Router) {
         
         const {
-            APP_AUTH_SERVER_URL,
-            APP_AUTH_REALM,
-            APP_AUTH_CLIENT_ID,
+            APP_AUTH_SERVER_URL = "https://keycloak.mjamsek.com/auth",
+            APP_AUTH_REALM = "",
+            APP_AUTH_CLIENT_ID = "",
             APP_AUTH_CLIENT_SECRET
         } = process.env;
         
         AuthConfigurator.configuration = {
-            authServerUrl: APP_AUTH_SERVER_URL || "https://keycloak.mjamsek.com/auth",
-            realm: APP_AUTH_REALM || "",
-            clientId: APP_AUTH_CLIENT_ID || "",
+            authServerUrl: APP_AUTH_SERVER_URL,
+            realm: APP_AUTH_REALM,
+            clientId: APP_AUTH_CLIENT_ID,
             clientSecret: APP_AUTH_CLIENT_SECRET
         };
         

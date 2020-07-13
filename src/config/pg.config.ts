@@ -7,27 +7,29 @@ export class PersistenceManager {
     public static async connect(): Promise<void> {
         
         const {
-            APP_DB,
-            APP_DB_HOST,
-            APP_DB_PORT,
-            APP_DB_USER,
-            APP_DB_PASSWORD,
-            APP_DB_AUTO_DDL
+            APP_DB = "ping-api",
+            APP_DB_HOST = "localhost",
+            APP_DB_PORT = "5432",
+            APP_DB_USER = "postgres",
+            APP_DB_PASSWORD = "postgres",
+            APP_DB_AUTO_DDL = "false"
         } = process.env;
+        
+        console.log(`Connecting to database on postgres://${APP_DB_HOST}:${APP_DB_PORT}/${APP_DB}`);
         
         PersistenceManager.connection = await createConnection({
             type: "postgres",
-            host: APP_DB_HOST || "localhost",
-            database: APP_DB || "ping-api",
-            port: parseInt(APP_DB_PORT || "5432", 10),
-            username: APP_DB_USER || "postgres",
-            password: APP_DB_PASSWORD || "postgres",
+            host: APP_DB_HOST,
+            database: APP_DB,
+            port: parseInt(APP_DB_PORT, 10),
+            username: APP_DB_USER,
+            password: APP_DB_PASSWORD,
             synchronize: APP_DB_AUTO_DDL === "true",
             logging: true,
             entities: ["dist/persistence/**/*.js"]
         });
         
-        // console.log(PersistenceManager.connection);
+        console.log("Connected to database!");
     }
     
     public static getInstance(): Connection {
