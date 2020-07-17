@@ -21,8 +21,9 @@ export class FirebaseConfig {
     
     public static async verifyToken(token: string | undefined): Promise<DecodedIdToken> {
         if (token) {
+            const bareToken = token.replace("Bearer ", "");
             try {
-                return await FirebaseConfig.auth.verifyIdToken(token);
+                return await FirebaseConfig.auth.verifyIdToken(bareToken);
             } catch (err) {
                 throw err;
             }

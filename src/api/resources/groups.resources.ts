@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { GroupsService } from "../../services/groups.service";
 import { Group, QueryBuilder, RequestQuery } from "../../lib";
+import admin from "firebase-admin";
+import DecodedIdToken = admin.auth.DecodedIdToken;
 
 
 export const getGroups = async (req: Request, res: Response) => {
@@ -9,9 +11,9 @@ export const getGroups = async (req: Request, res: Response) => {
         .buildQuery(req.query as RequestQuery)
         .build();
     
-    const payload = res.locals.jwt;
+    const payload: DecodedIdToken = res.locals.jwt;
     if (payload) {
-        const ownerId = payload.sub;
+        const ownerId = payload.uid;
         const entityList = await GroupsService.findAll(queryParams, ownerId);
         
         res
@@ -26,9 +28,9 @@ export const getGroups = async (req: Request, res: Response) => {
 export const getGroup = async (req: Request, res: Response) => {
     const groupId = req.params.id;
     
-    const payload = res.locals.jwt;
+    const payload: DecodedIdToken = res.locals.jwt;
     if (payload) {
-        const ownerId = payload.sub;
+        const ownerId = payload.uid;
         const group = await GroupsService.find(groupId, ownerId);
         res.status(200).json(group);
     } else {
@@ -38,10 +40,10 @@ export const getGroup = async (req: Request, res: Response) => {
 
 export const createGroup = async (req: Request<{}, Group, Group, {}>, res: Response) => {
     const group = req.body;
-    const payload = res.locals.jwt;
+    const payload: DecodedIdToken = res.locals.jwt;
     
     if (payload) {
-        const ownerId = payload.sub;
+        const ownerId = payload.uid;
         const createdGroup = await GroupsService.create(group, ownerId);
     
         res.status(201)
@@ -54,10 +56,10 @@ export const createGroup = async (req: Request<{}, Group, Group, {}>, res: Respo
 
 export const deleteGroup = async (req: Request, res: Response) => {
     const groupId = req.params.id;
-    const payload = res.locals.jwt;
+    const payload: DecodedIdToken = res.locals.jwt;
     
     if (payload) {
-        const ownerId = payload.sub;
+        const ownerId = payload.uid;
         
         await GroupsService.delete(groupId, ownerId);
         res.status(204).send();

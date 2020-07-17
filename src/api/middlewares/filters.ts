@@ -14,9 +14,13 @@ export const authenticateUser = async (req: Request, res: Response, next: NextFu
     const token = req.header("Authorization");
     try {
         res.locals.jwt = await FirebaseConfig.verifyToken(token);
+        next();
     } catch (err) {
-        res.status(401).json({
-            message: "Unauthenticated!"
-        });
+        res.status(401)
+            .header("WWW-Authenticate", "Bearer realm=\"ping-pong\", charset=\"UTF-8\"")
+            .json({
+                error: "Unauthorized!",
+                status: 401
+            });
     }
 };
