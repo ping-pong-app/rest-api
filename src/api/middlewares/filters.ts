@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { FirebaseConfig } from "../../config/firebase.config";
 
 export const developmentModeFilter = async (req: Request, res: Response, next: NextFunction) => {
     const {NODE_ENV} = process.env;
@@ -9,10 +10,13 @@ export const developmentModeFilter = async (req: Request, res: Response, next: N
     }
 };
 
-export const propagateTokenPayload = async (req: Request, res: Response, next: NextFunction) => {
-    const token = null;
-    if (token) {
-        res.locals.jwt = token;
+export const authenticateUser = async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.header("Authorization");
+    try {
+        res.locals.jwt = await FirebaseConfig.verifyToken(token);
+    } catch (err) {
+        res.status(401).json({
+            message: "Unauthenticated!"
+        });
     }
-    next();
 };

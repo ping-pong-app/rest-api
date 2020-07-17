@@ -21,6 +21,8 @@ ENV APP_DB_PORT=5432
 ENV APP_DB_USER=postgres
 ENV APP_DB_PASSWORD=postgres
 
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/firebase-credentials.json
+
 EXPOSE 3000
 
 CMD ["node", "dist/server.js"]

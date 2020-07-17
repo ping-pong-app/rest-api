@@ -1,13 +1,13 @@
 import { Route } from "../../config";
 import { createGroup, deleteGroup, getGroup, getGroups } from "../resources/groups.resources";
-import { propagateTokenPayload } from "../middlewares";
+import { authenticateUser } from "../middlewares";
 
 export const routes: Route[] = [
     {
         path: "/v1/groups",
         method: "get",
         handler: [
-            propagateTokenPayload,
+            authenticateUser,
             getGroups
         ]
     },
@@ -15,7 +15,7 @@ export const routes: Route[] = [
         path: "/v1/groups/:id",
         method: "get",
         handler: [
-            propagateTokenPayload,
+            authenticateUser,
             getGroup
         ]
     },
@@ -23,7 +23,7 @@ export const routes: Route[] = [
         path: "/v1/groups",
         method: "post",
         handler: [
-            propagateTokenPayload,
+            authenticateUser,
             createGroup
         ]
     },
@@ -31,7 +31,7 @@ export const routes: Route[] = [
         path: "/v1/groups/:id",
         method: "delete",
         handler: [
-            propagateTokenPayload,
+            authenticateUser,
             deleteGroup
         ]
     }

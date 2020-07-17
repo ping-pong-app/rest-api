@@ -12,7 +12,7 @@ import {
     SwaggerUIServlet,
 } from "./servlets";
 
-export { developmentModeFilter, propagateTokenPayload } from "./filters";
+export { developmentModeFilter, authenticateUser } from "./filters";
 
 export const middlewares: MiddlewareSetupFunction[] = [
     handleCors,
