@@ -6,7 +6,7 @@ const testGroups: GroupEntity[] = [
     {
         id: "b8c37402-9c00-472f-9c8d-82be30b9b72d",
         name: "3. stuk",
-        ownerId: "l7btv4GCgndce1Mxkn6vS3yLWBM2",
+        ownerId: "BFTEQGbDsSXRRLDnGfo3GbBmiUZ2",
         createdAt: new Date(),
         updatedAt: new Date(),
         members: []
@@ -14,7 +14,7 @@ const testGroups: GroupEntity[] = [
     {
         id: "58db5ef7-6d68-46fc-9932-e8b7af6e08ee",
         name: "klapa",
-        ownerId: "l7btv4GCgndce1Mxkn6vS3yLWBM2",
+        ownerId: "BFTEQGbDsSXRRLDnGfo3GbBmiUZ2",
         createdAt: new Date(),
         updatedAt: new Date(),
         members: []
@@ -23,13 +23,13 @@ const testGroups: GroupEntity[] = [
 
 const groupMemberships: GroupMemberEntity[] = [
     {
-        userId: "l7btv4GCgndce1Mxkn6vS3yLWBM2",
+        userId: "BFTEQGbDsSXRRLDnGfo3GbBmiUZ2",
     },
     {
-        userId: "l7btv4GCgndce1Mxkn6vS3yLWBM2"
+        userId: "BFTEQGbDsSXRRLDnGfo3GbBmiUZ2"
     },
     {
-        userId: "VrdY9Q7RIBZCeKLZNiVwRbs5tLv1"
+        userId: "aZ8SKZyALsTNojzAQ6XUNXIFMgS2"
     },
 ];
 
@@ -58,15 +58,16 @@ export class TestService {
     private static async emptyGroups(): Promise<void> {
         const repository = PersistenceManager.getInstance().getRepository(GroupEntity);
         const membershipRepository = PersistenceManager.getInstance().getRepository(GroupMemberEntity);
-        await repository
-            .createQueryBuilder()
-            .delete()
-            .from(GroupEntity)
-            .execute();
+    
         await membershipRepository
             .createQueryBuilder()
             .delete()
             .from(GroupMemberEntity)
+            .execute();
+        await repository
+            .createQueryBuilder()
+            .delete()
+            .from(GroupEntity)
             .execute();
     }
     

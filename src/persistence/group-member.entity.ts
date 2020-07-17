@@ -11,8 +11,9 @@ export class GroupMemberEntity {
     @ManyToOne(
         () => GroupEntity,
         group => group.members,
+        {onDelete: "CASCADE"}
     )
-    @JoinColumn({name: "group_id", referencedColumnName: ""})
+    @JoinColumn({name: "group_id"})
     public group?: GroupEntity;
     
 }
