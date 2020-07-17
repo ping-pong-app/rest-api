@@ -1,4 +1,6 @@
-import { Connection, createConnection } from "typeorm";
+import { Connection, createConnection, EntitySchema } from "typeorm";
+import { ObjectType } from "typeorm/common/ObjectType";
+import { Repository } from "typeorm/repository/Repository";
 
 export class PersistenceManager {
     
@@ -29,7 +31,7 @@ export class PersistenceManager {
                 logging: true,
                 entities: ["dist/persistence/**/*.js"]
             });
-    
+            
             console.log("Connected to database!");
         } catch (err) {
             console.error("Error connecting to database!", err);
@@ -39,6 +41,10 @@ export class PersistenceManager {
     
     public static getInstance(): Connection {
         return PersistenceManager.connection;
+    }
+    
+    public static getRepository<E>(target: ObjectType<E> | EntitySchema<E> | string): Repository<E> {
+        return PersistenceManager.connection.getRepository(target);
     }
     
 }

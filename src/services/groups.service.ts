@@ -1,8 +1,9 @@
 import { GroupEntity, GroupMemberEntity } from "../persistence";
-import { EntityList, Group, Http404Error, QueryParameters } from "../lib";
+import { EntityList, Group, GroupMembership, Http404Error, InternalServerError, QueryParameters } from "../lib";
 import { GroupsMapper } from "./mappers/groups.mapper";
 import { PersistenceManager } from "../config";
 import { Validator } from "./validator";
+import { FirebaseService } from "./firebase.service";
 
 export class GroupsService {
     
@@ -73,6 +74,35 @@ export class GroupsService {
                 .from(GroupMemberEntity)
                 .where("group_id = :groupId", {groupId})
                 .execute();
+        }
+    }
+    
+    public static async addUserToGroup(membership: GroupMembership, userId: string): Promise<void> {
+        let user;
+        try {
+            user = await FirebaseService.checkIfUserExists(membership.email);
+        } catch (firebaseError) {
+            throw new InternalServerError("User not found!");
+        }
+        
+        const repository = PersistenceManager.getRepository(GroupEntity);
+        const group = await repository.findOne(membership.groupId, {
+            where: {
+                ownerId: userId
+            }
+        });
+        
+        if (group) {
+            const membershipRepository = await PersistenceManager.getRepository(GroupMemberEntity);
+            
+            const newMembership = new GroupMemberEntity();
+            newMembership.group = group;
+            newMembership.userId = user.uid;
+            
+            membershipRepository.insert(newMembership);
+            
+        } else {
+            throw new Http404Error();
         }
     }
     

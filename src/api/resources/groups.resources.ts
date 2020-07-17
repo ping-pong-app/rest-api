@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { GroupsService } from "../../services/groups.service";
-import { Group, QueryBuilder, RequestQuery } from "../../lib";
+import { GroupsService } from "../../services";
+import { Group, QueryBuilder, RequestQuery, GroupMembership } from "../../lib";
 import admin from "firebase-admin";
 import DecodedIdToken = admin.auth.DecodedIdToken;
 
@@ -62,6 +62,17 @@ export const deleteGroup = async (req: Request, res: Response) => {
         const ownerId = payload.uid;
         
         await GroupsService.delete(groupId, ownerId);
+        res.status(204).send();
+    } else {
+        res.status(401).send();
+    }
+};
+
+export const addUserToGroup = async (req: Request<{}, {}, GroupMembership, {}>, res: Response) => {
+    const payload: DecodedIdToken = res.locals.jwt;
+    if (payload) {
+        const ownerId = payload.uid;
+        await GroupsService.addUserToGroup(req.body, ownerId);
         res.status(204).send();
     } else {
         res.status(401).send();

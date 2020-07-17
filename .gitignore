@@ -191,4 +191,4 @@ dist
 
 .idea/
 *.iml
-firebase-credentials.json
+firebase-credentials-old.json

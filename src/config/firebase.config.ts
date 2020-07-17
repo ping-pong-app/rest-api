@@ -32,4 +32,8 @@ export class FirebaseConfig {
         }
     }
     
+    public static getAuth(): Auth {
+        return FirebaseConfig.auth;
+    }
+    
 }

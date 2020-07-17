@@ -195,6 +195,56 @@
                 }
             }
         },
+        "/groups/add": {
+            "post": {
+                "tags": [
+                    "group"
+                ],
+                "summary": "Adds user to group",
+                "description": "Adds user to specified group, if provided email is registered and caller is owner of group.",
+                "operationId": "addUserToGroup",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/GroupMembership"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "User was added to the group."
+                    }
+                }
+            }
+        },
+        "/ping": {
+            "post": {
+                "tags": [
+                    "ping"
+                ],
+                "summary": "Pings all users in group",
+                "description": "Sends push notification to all group members.",
+                "operationId": "ping",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Ping"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Group was pinged."
+                    }
+                }
+            }
+        },
         "/health/live": {
             "get": {
                 "tags": ["health"],
@@ -298,6 +348,25 @@
                         "nullable": false
                     },
                     "ownerId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "GroupMembership": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "groupId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Ping": {
+                "type": "object",
+                "properties": {
+                    "groupId": {
                         "type": "string"
                     }
                 }
