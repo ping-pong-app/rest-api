@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router, static as staticServe } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import { join } from "path";
 import swaggerUi from "swagger-ui-express";
 import swagger from "../docs/openapi.json";

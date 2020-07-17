@@ -13,8 +13,8 @@ export const getGroups = async (req: Request, res: Response) => {
     
     const payload: DecodedIdToken = res.locals.jwt;
     if (payload) {
-        const ownerId = payload.uid;
-        const entityList = await GroupsService.findAll(queryParams, ownerId);
+        const userId = payload.uid;
+        const entityList = await GroupsService.findAll(queryParams, userId);
         
         res
             .status(200)
