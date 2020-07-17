@@ -1,15 +1,10 @@
 import { PersistenceManager } from "./pg.config";
 import { MiddlewareSetupFunction, Route } from "./common.models";
 import { Router } from "express";
-import { AuthConfigurator } from "./auth.config";
 
 
 export const initConfiguration = async () => {
     await PersistenceManager.connect();
-};
-
-export const applyAuthentication = (router: Router) => {
-    AuthConfigurator.configure(router);
 };
 
 export const applyMiddleware = (setupFunctions: MiddlewareSetupFunction[], router: Router) => {
