@@ -21,7 +21,7 @@
     ],
     "security": [
         {
-            "Keycloak": []
+            "Firebase": []
         }
     ],
     "paths": {
@@ -280,17 +280,10 @@
     },
     "components": {
         "securitySchemes": {
-            "Keycloak": {
-                "type": "oauth2",
-                "description": "Get credentials from Keycloak server.",
-                "flows": {
-                    "implicit": {
-                        "authorizationUrl": "https://keycloak.mjamsek.com/auth/realms/ping-pong/protocol/openid-connect/auth?client_id=ping-public",
-                        "scopes": {
-
-                        }
-                    }
-                }
+            "Firebase": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization"
             }
         },
         "schemas": {
