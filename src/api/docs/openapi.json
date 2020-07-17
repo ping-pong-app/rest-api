@@ -15,7 +15,7 @@
             "description": "Local development environment"
         },
         {
-            "url": "http://test.mjamsek.com/v1",
+            "url": "https://test.mjamsek.com/v1",
             "description": "Stage testing environment"
         }
     ],
@@ -207,7 +207,7 @@
                         "description": "Local development environment"
                     },
                     {
-                        "url": "http://test.mjamsek.com",
+                        "url": "https://test.mjamsek.com",
                         "description": "Stage testing environment"
                     }
                 ],
@@ -248,7 +248,7 @@
                         "description": "Local development environment"
                     },
                     {
-                        "url": "http://test.mjamsek.com",
+                        "url": "https://test.mjamsek.com",
                         "description": "Stage testing environment"
                     }
                 ],
