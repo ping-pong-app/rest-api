@@ -6,6 +6,7 @@ ADD package-lock.json /tmp/package-lock.json
 RUN cd /tmp && npm install
 
 RUN mkdir /app
+RUN mkdir /config
 WORKDIR /app
 
 # Move installed dependencies to app directory
@@ -21,7 +22,7 @@ ENV APP_DB_PORT=5432
 ENV APP_DB_USER=postgres
 ENV APP_DB_PASSWORD=postgres
 
-ENV GOOGLE_APPLICATION_CREDENTIALS=/app/firebase-credentials.json
+ENV GOOGLE_APPLICATION_CREDENTIALS=/config/firebase-credentials.json
 
 EXPOSE 3000
 
