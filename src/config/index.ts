@@ -2,11 +2,13 @@ import { PersistenceManager } from "./pg.config";
 import { MiddlewareSetupFunction, Route } from "./common.models";
 import { Router } from "express";
 import { FirebaseConfig } from "./firebase.config";
+import { CronConfig } from "./cron.config";
 
 
 export const initConfiguration = async () => {
     await FirebaseConfig.initialize();
     await PersistenceManager.connect();
+    await CronConfig.initialize();
 };
 
 export const applyMiddleware = (setupFunctions: MiddlewareSetupFunction[], router: Router) => {
