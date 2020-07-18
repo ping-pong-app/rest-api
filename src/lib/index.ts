@@ -3,6 +3,7 @@ export { HealthCheck, HealthcheckReport } from "./healthcheck.models";
 export { Group } from "./groups.model";
 export { GroupMember, GroupMembership } from "./group-member.model";
 export { Ping } from "./ping.model";
+export { Invitation } from "./invitation.model";
 
 export { BaseError } from "./errors/base.error";
 export { Http404Error } from "./errors/not-found.error";
