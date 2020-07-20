@@ -1,7 +1,8 @@
-import admin, { initializeApp, auth } from "firebase-admin";
+import admin, { initializeApp, auth, messaging } from "firebase-admin";
 import App = admin.app.App;
 import Auth = admin.auth.Auth;
 import DecodedIdToken = admin.auth.DecodedIdToken;
+import Messaging = admin.messaging.Messaging;
 
 
 export class FirebaseConfig {
@@ -10,13 +11,19 @@ export class FirebaseConfig {
     
     private static auth: Auth;
     
+    private static messaging: Messaging;
+    
     public static initialize() {
         const {GOOGLE_APPLICATION_CREDENTIALS} = process.env;
         
-        console.log(`Initializing FirebaseAuth... Reading service account credentials from '${GOOGLE_APPLICATION_CREDENTIALS}'`);
+        console.log(`Initializing Firebase... Reading service account credentials from '${GOOGLE_APPLICATION_CREDENTIALS}'`);
         FirebaseConfig.application = initializeApp();
         FirebaseConfig.auth = auth();
-        console.log("FirebaseAuth initialized!");
+        console.log("Firebase Authentication component initialized!");
+        FirebaseConfig.messaging = messaging();
+        console.log("Firebase Cloud Messaging component initialized!");
+        
+        console.log("Firebase initialized!");
     }
     
     public static async verifyToken(token: string | undefined): Promise<DecodedIdToken> {
@@ -34,6 +41,10 @@ export class FirebaseConfig {
     
     public static getAuth(): Auth {
         return FirebaseConfig.auth;
+    }
+    
+    public static getMessaging(): Messaging {
+        return FirebaseConfig.messaging;
     }
     
 }
