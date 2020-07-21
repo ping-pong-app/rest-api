@@ -10,6 +10,7 @@ import { handle404Error, handleCustomError, handleUnknownError } from "./error.m
 import {
     SwaggerServlet,
     SwaggerUIServlet,
+    FcmSchemaServlet,
 } from "./servlets";
 
 export { developmentModeFilter, authenticateUser } from "./filters";
@@ -22,6 +23,7 @@ export const middlewares: MiddlewareSetupFunction[] = [
     handleCookieParsing,
     SwaggerServlet,
     SwaggerUIServlet,
+    FcmSchemaServlet,
 ];
 
 export const errorMiddlewares: MiddlewareSetupFunction[] = [

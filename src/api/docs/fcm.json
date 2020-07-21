@@ -1,0 +1,23 @@
+{
+    "title": "Firebase Cloud Messaging message schema definition",
+    "type": "object",
+    "properties": {
+        "userId": {
+            "type": "string",
+            "description": "Firebase Authentication user Id"
+        },
+        "groupId": {
+            "type": "string",
+            "description": "UUID of a group being pinged"
+        },
+        "timestamp": {
+            "type": "string",
+            "description": "Timestamp in ISO format of ping event"
+        }
+    },
+    "required": [
+        "groupId",
+        "timestamp",
+        "userId"
+    ]
+}

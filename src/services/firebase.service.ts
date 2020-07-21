@@ -9,15 +9,20 @@ export class FirebaseService {
         return await FirebaseConfig.getAuth().getUserByEmail(email);
     }
     
+    public static async getUserInfo(userId: string): Promise<UserRecord> {
+        return await FirebaseConfig.getAuth().getUser(userId);
+    }
+    
     public static async pingGroup(groupId: string, userId: string): Promise<void> {
         const message: Message = {
             topic: `PING.${groupId}`,
             data: {
-                pingedBy: userId,
+                userId,
+                groupId,
                 timestamp: new Date().toISOString()
-            },
-            
+            }
         };
+        
         await FirebaseConfig.getMessaging().send(message);
     }
     

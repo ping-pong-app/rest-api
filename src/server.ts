@@ -7,9 +7,6 @@ import "reflect-metadata";
 
 const router = express();
 
-
-// import routes and middlewares after authentication is finished,
-// due to middleware function not yet instantiated on apply function call.
 import { errorMiddlewares, middlewares } from "./api/middlewares";
 applyMiddleware(middlewares, router);
 
