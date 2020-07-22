@@ -5,6 +5,8 @@ import Message = admin.messaging.Message;
 import Firestore = admin.firestore.Firestore;
 
 import { FirebaseConfig } from "../config/firebase.config";
+import { BadRequestError, Optional } from "../lib";
+
 
 export class FirebaseService {
     
@@ -25,12 +27,25 @@ export class FirebaseService {
         }
     }
     
-    public static async checkIfUserExists(email: string): Promise<UserRecord> {
+    public static async checkIfUserExists(email: Optional<string>): Promise<UserRecord> {
+        if (!email) {
+            throw new BadRequestError();
+        }
         return await FirebaseConfig.getAuth().getUserByEmail(email);
     }
     
     public static async getUserInfo(userId: string): Promise<UserRecord> {
         return await FirebaseConfig.getAuth().getUser(userId);
+    }
+    
+    public static async getUsersInfo(userIds: string[]): Promise<UserRecord[]> {
+        const identifiers = userIds.map(id => {
+            return {
+                uid: id
+            };
+        });
+        const usersResult = await FirebaseConfig.getAuth().getUsers(identifiers);
+        return usersResult.users;
     }
     
     public static async sendCloudMessage(topic: string, data: any): Promise<void> {

@@ -8,6 +8,16 @@ export class EntityList<E> {
     }
 }
 
+export type Optional<T> = T | null | undefined;
+
+export class EntityIdentifier {
+    public readonly id: string;
+    
+    constructor(id: string) {
+        this.id = id;
+    }
+}
+
 export class QueryParameters {
     private _limit: number = 10;
     private _offset: number = 0;

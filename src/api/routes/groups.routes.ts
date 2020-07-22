@@ -1,6 +1,6 @@
 import { Route } from "../../config";
 import { authenticateUser } from "../middlewares";
-import { createGroup, deleteGroup, getGroup, getGroups } from "../resources/groups.resources";
+import { createGroup, deleteGroup, getGroup, getGroupMembers, getGroups } from "../resources/groups.resources";
 import { getGroupInvites } from "../resources/invitation.resource";
 
 export const routes: Route[] = [
@@ -26,6 +26,14 @@ export const routes: Route[] = [
         handler: [
             authenticateUser,
             getGroupInvites
+        ]
+    },
+    {
+        path: "/v1/groups/:id/members",
+        method: "get",
+        handler: [
+            authenticateUser,
+            getGroupMembers
         ]
     },
     {

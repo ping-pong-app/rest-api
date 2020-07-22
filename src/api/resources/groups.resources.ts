@@ -42,6 +42,23 @@ export const getGroup = async (req: Request, res: Response) => {
         });
 };
 
+export const getGroupMembers = async (req: Request, res: Response) => {
+    const groupId = req.params.id;
+    
+    getTokenPayload(res,
+        async (payload: DecodedIdToken) => {
+            const userId = payload.uid;
+            
+            const members = await GroupsService.findGroupMembers(groupId, userId);
+            res.status(Rest.STATUS_OK)
+                .header(Rest.X_TOTAL_COUNT, members.count.toString(10))
+                .json(members.entities);
+        },
+        () => {
+            res.status(Rest.STATUS_UNAUTHORIZED).send();
+        });
+};
+
 export const createGroup = async (req: Request<{}, Group, Group, {}>, res: Response) => {
     const group = req.body;
     

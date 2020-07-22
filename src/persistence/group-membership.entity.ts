@@ -1,7 +1,7 @@
 import { BaseEntity } from "./base.entity";
 
 
-export class GroupMemberEntity implements BaseEntity {
+export class GroupMembershipEntity implements BaseEntity {
     
     public static readonly TABLE_NAME = "group_memberships";
     

@@ -32,7 +32,7 @@
                 ],
                 "summary": "Returns list of groups",
                 "description": "Retrieves paginated list of groups.",
-                "operationId": "findAllGroups",
+                "operationId": "getAllGroups",
                 "parameters": [
                     {
                         "name": "limit",
@@ -80,7 +80,7 @@
                     "group"
                 ],
                 "summary": "Creates group",
-                "description": "Creates group and returns created entity.",
+                "description": "Creates group with caller set as owner and member.",
                 "operationId": "createGroup",
                 "requestBody": {
                     "required": true,
@@ -106,7 +106,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Group"
+                                    "$ref": "#/components/schemas/EntityIdentifier"
                                 }
                             }
                         }
@@ -124,12 +124,120 @@
                 }
             }
         },
+        "/groups/{id}/invites": {
+            "get": {
+                "tags": [
+                    "group"
+                ],
+                "summary": "Returns group's invites",
+                "description": "Returns all invitations to group with given id",
+                "operationId": "getGroupInvites",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns group's invites",
+                        "headers": {
+                            "X-Total-Count": {
+                                "description": "Count of all entities",
+                                "schema": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Invitation"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Group not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{id}/members": {
+            "get": {
+                "tags": [
+                    "group"
+                ],
+                "summary": "Get group members",
+                "description": "Returns list of members belonging to group with given id. Retrieves additional data from Firebase Authentication",
+                "operationId": "getGroupMembers",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of group members",
+                        "headers": {
+                            "X-Total-Count": {
+                                "description": "Count of members",
+                                "schema": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schema/GroupMembership"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Group not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/groups/{id}": {
             "get": {
-                "tags": ["group"],
+                "tags": [
+                    "group"
+                ],
                 "summary": "Returns group",
-                "description": "Retrieves group by given id",
-                "operationId": "getOneGroup",
+                "description": "Retrieves group with given id",
+                "operationId": "getGroup",
                 "parameters": [
                     {
                         "name": "id",
@@ -164,7 +272,9 @@
                 }
             },
             "delete": {
-                "tags": ["group"],
+                "tags": [
+                    "group"
+                ],
                 "summary": "Deletes group",
                 "description": "Deletes group with given id",
                 "operationId": "deleteGroup",
@@ -195,31 +305,6 @@
                 }
             }
         },
-        "/groups/add": {
-            "post": {
-                "tags": [
-                    "group"
-                ],
-                "summary": "Adds user to group",
-                "description": "Adds user to specified group, if provided email is registered and caller is owner of group.",
-                "operationId": "addUserToGroup",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/GroupMembership"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "204": {
-                        "description": "User was added to the group."
-                    }
-                }
-            }
-        },
         "/ping": {
             "post": {
                 "tags": [
@@ -241,13 +326,216 @@
                 "responses": {
                     "204": {
                         "description": "Group was pinged."
+                    },
+                    "404": {
+                        "description": "Group not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/invites": {
+            "get": {
+                "tags": [
+                    "invites"
+                ],
+                "summary": "Get user invitations",
+                "description": "Returns all invitations belonging to the caller",
+                "operationId": "getUserInvites",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Invitation"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200":{
+                        "description": "Returns user's invitations",
+                        "headers": {
+                            "X-Total-Count": {
+                                "description": "Count of all invitations",
+                                "schema": {
+                                    "type": "number"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Invitation"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "invites"
+                ],
+                "summary": "Invite user",
+                "description": "Invites user to group with given id",
+                "operationId": "inviteUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schema/Invitation"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User was invited to the group"
+                    },
+                    "404": {
+                        "description": "Group not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Invitation for the user already exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/invites/{id}/accept": {
+            "post": {
+                "tags": [
+                    "invites"
+                ],
+                "summary": "Accepts invitation",
+                "description": "Accepts invitation to the group.",
+                "operationId": "acceptInvite",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Invitation accepted"
+                    },
+                    "404": {
+                        "description": "Invitation not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/invites/{id}/reject": {
+            "delete": {
+                "tags": [
+                    "invites"
+                ],
+                "summary": "Rejects invitation",
+                "description": "Rejects invitation to the group.",
+                "operationId": "rejectInvite",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Invitation rejected"
+                    },
+                    "404": {
+                        "description": "Invitation not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/invites/{id}/cancel": {
+            "delete": {
+                "tags": [
+                    "invites"
+                ],
+                "summary": "Cancels invitation",
+                "description": "Cancels invitation to the group.",
+                "operationId": "cancelInvite",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Invitation cancelled"
+                    },
+                    "404": {
+                        "description": "Invitation not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
         "/health/live": {
             "get": {
-                "tags": ["health"],
+                "tags": [
+                    "health"
+                ],
                 "summary": "Liveness check",
                 "description": "Endpoint for liveness check",
                 "operationId": "livenessHealth",
@@ -288,7 +576,9 @@
         },
         "/health/ready": {
             "get": {
-                "tags": ["health"],
+                "tags": [
+                    "health"
+                ],
                 "summary": "Readiness check",
                 "description": "Endpoint for readiness check",
                 "operationId": "readinessHealth",
@@ -337,6 +627,15 @@
             }
         },
         "schemas": {
+            "EntityIdentifier": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "nullable": false
+                    }
+                }
+            },
             "Group": {
                 "type": "object",
                 "properties": {
@@ -360,6 +659,34 @@
                     },
                     "groupId": {
                         "type": "string"
+                    },
+                    "userId": {
+                        "type": "string"
+                    },
+                    "displayName": {
+                        "type": "string"
+                    },
+                    "photo": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Invitation": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "userId": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "groupId": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "nullable": true
                     }
                 }
             },

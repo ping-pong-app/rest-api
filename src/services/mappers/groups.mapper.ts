@@ -3,6 +3,8 @@ import DocumentSnapshot = admin.firestore.DocumentSnapshot;
 import Timestamp = admin.firestore.Timestamp;
 
 import { Group } from "../../lib";
+import { GroupEntity } from "../../persistence";
+import FieldValue = admin.firestore.FieldValue;
 
 export class GroupsMapper {
     
@@ -14,6 +16,14 @@ export class GroupsMapper {
         group.updatedAt = (entity.get("updatedAt") as Timestamp).toDate();
         group.createdAt = (entity.get("createdAt") as Timestamp).toDate();
         return group;
+    }
+    
+    public static toEntity(group: Group): GroupEntity {
+        const entity = new GroupEntity();
+        entity.name = group.name;
+        entity.createdAt = FieldValue.serverTimestamp();
+        entity.updatedAt = FieldValue.serverTimestamp();
+        return entity;
     }
     
 }

@@ -1,3 +1,3 @@
 export { GroupEntity } from "./group.entity";
-export { GroupMemberEntity } from "./group-member.entity";
+export { GroupMembershipEntity } from "./group-membership.entity";
 export { InvitationEntity } from "./invitation.entity";

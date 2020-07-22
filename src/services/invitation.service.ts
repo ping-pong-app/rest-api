@@ -1,8 +1,9 @@
-import { NotFoundError, Invitation, EntityList } from "../lib";
+import { NotFoundError, Invitation, EntityList, EntityIdentifier, ConflictError } from "../lib";
 import { InvitationEntity } from "../persistence";
 import { GroupsService } from "./groups.service";
 import { FirebaseService } from "./firebase.service";
 import { InvitationMapper } from "./mappers/invitation.mapper";
+import { Validator } from "./validator";
 
 
 export class InvitationService {
@@ -22,23 +23,28 @@ export class InvitationService {
     
     public static async getGroupInvites(ownerId: string, groupId: string): Promise<EntityList<Invitation>> {
         if (await GroupsService.isOwnerOfGroup(ownerId, groupId)) {
-    
+            
             const invitations = await FirebaseService.getDatabase()
                 .collection(InvitationEntity.TABLE_NAME)
                 .where("groupId", "==", groupId)
                 .get();
-    
+            
             const invites = invitations.docs.map(entity => {
                 return InvitationMapper.fromEntity(entity);
             });
-    
+            
             return new EntityList<Invitation>(invites, invites.length);
         } else {
             throw new NotFoundError("Group not found!");
         }
     }
-
-    public static async inviteUser(invitation: Invitation, userId: string): Promise<void> {
+    
+    public static async inviteUser(invitation: Invitation, userId: string): Promise<EntityIdentifier> {
+        Validator.assertNotNull(invitation);
+        Validator.assertNotBlank(invitation.email, "email", "Invitation");
+        Validator.assertNotBlank(invitation.groupId, "groupId", "Invitation");
+        
+        
         if (await GroupsService.isOwnerOfGroup(userId, invitation.groupId)) {
             
             const existingInvitation = await FirebaseService.getDatabase()
@@ -47,19 +53,23 @@ export class InvitationService {
                 .where("groupId", "==", invitation.groupId)
                 .get();
             
-            if (!existingInvitation.empty) {
+            if (existingInvitation.empty) {
+                
+                const user = await FirebaseService.checkIfUserExists(invitation.email);
+                
                 const invite = new InvitationEntity();
                 invite.groupId = invitation.groupId;
-                invite.userId = invitation.userId;
-    
+                invite.userId = user.uid;
+                
                 const savedEntity = await FirebaseService.getDatabase()
                     .collection(InvitationEntity.TABLE_NAME)
                     .add(invite.raw());
-    
+                
                 // Notify user of invite (push notification)
-                await InvitationService.notifyUserOnInvite(savedEntity.id, invitation.userId);
+                await InvitationService.notifyUserOnInvite(savedEntity.id, user.uid);
+                return new EntityIdentifier(savedEntity.id);
             } else {
-                await InvitationService.notifyUserOnInvite("existingInvitation.", invitation.userId);
+                throw new ConflictError("Invitation for given user already exists!");
             }
         } else {
             throw new NotFoundError("Group not found!");
@@ -91,8 +101,8 @@ export class InvitationService {
             .collection(InvitationEntity.TABLE_NAME)
             .doc(invitationId)
             .get();
-    
-        if (invitation.exists) {
+        
+        if (invitation.exists && invitation.get("userId") === userId) {
             await FirebaseService.getDatabase()
                 .collection(InvitationEntity.TABLE_NAME)
                 .doc(invitation.id)
@@ -128,5 +138,5 @@ export class InvitationService {
         };
         await FirebaseService.sendCloudMessage(topic, data);
     }
-
+    
 }

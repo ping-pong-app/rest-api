@@ -1,7 +1,14 @@
-export { EntityList, QueryBuilder, RequestQuery, QueryParameters } from "./common.models";
+export {
+    EntityList,
+    QueryBuilder,
+    RequestQuery,
+    QueryParameters,
+    EntityIdentifier,
+    Optional,
+} from "./common.models";
 export { HealthCheck, HealthcheckReport } from "./healthcheck.models";
 export { Group } from "./groups.model";
-export { GroupMember, GroupMembership } from "./group-member.model";
+export { GroupMembership } from "./group-member.model";
 export { Ping } from "./ping.model";
 export { Invitation } from "./invitation.model";
 export { Rest } from "./rest.models";
@@ -11,3 +18,5 @@ export { NotFoundError } from "./errors/not-found.error";
 export { ValidationError } from "./errors/validation.error";
 export { UnathorizedError } from "./errors/unathorized.error";
 export { InternalServerError } from "./errors/internal-server.error";
+export { BadRequestError } from "./errors/bad-request.error";
+export { ConflictError } from "./errors/conflict.error";
