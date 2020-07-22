@@ -1,18 +1,18 @@
 {
-    "title": "Firebase Cloud Messaging message schema definition",
+    "title": "Firebase Cloud Messaging message schema definition for PING action",
     "type": "object",
     "properties": {
         "userId": {
             "type": "string",
-            "description": "Firebase Authentication user Id"
+            "description": "Firebase Authentication user id (UID)"
         },
         "groupId": {
             "type": "string",
-            "description": "UUID of a group being pinged"
+            "description": "Pinged group's id (UID)"
         },
         "timestamp": {
             "type": "string",
-            "description": "Timestamp in ISO format of ping event"
+            "description": "Timestamp in ISO format"
         }
     },
     "required": [

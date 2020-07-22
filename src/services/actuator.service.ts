@@ -1,4 +1,5 @@
 import { HealthCheck, HealthcheckReport } from "../lib";
+import { FirebaseConfig } from "../config/firebase.config";
 
 
 export class ActuatorService {
@@ -19,9 +20,11 @@ export class ActuatorService {
     private static async databaseCheck(): Promise<HealthCheck> {
         const check = new HealthCheck("DataSourceHealthCheck");
         try {
-            // Replace with firestore if aplicable:
-            // await PersistenceManager.getInstance().query("SELECT NOW()");
-            check.up();
+            if (FirebaseConfig.getDatabase() !== null) {
+                check.up();
+            } else {
+                check.down();
+            }
         } catch (err) {
             console.error(err);
             check.down();

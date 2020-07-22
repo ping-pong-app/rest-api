@@ -1,0 +1,23 @@
+{
+    "title": "Firebase Cloud Messaging message schema definition for INVITE action",
+    "type": "object",
+    "properties": {
+        "userId": {
+            "type": "string",
+            "description": "Firebase Authentication user id (UID)"
+        },
+        "invitationId": {
+            "type": "string",
+            "description": "Invitation's id (UID)"
+        },
+        "timestamp": {
+            "type": "string",
+            "description": "Timestamp in ISO format"
+        }
+    },
+    "required": [
+        "invitationId",
+        "timestamp",
+        "userId"
+    ]
+}
