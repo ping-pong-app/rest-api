@@ -1,0 +1,41 @@
+services:
+  - docker
+
+language: node_js
+dist: trusty
+node_js:
+  - '12'
+
+branches:
+  only:
+    - develop
+
+cache:
+  directories:
+    - ./node_modules
+
+env:
+  global:
+    - DOCKER_IMAGE=docker.mjamsek.com/ping-api:latest
+
+install: npm install
+
+script:
+  - npm run build
+  - docker build -t $DOCKER_IMAGE .
+
+after_success:
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" docker.mjamsek.com
+  - docker push $DOCKER_IMAGE
+
+notifications:
+  email: false
+  slack:
+    rooms:
+      - secure: Z1YpCFvJJzQurIQ9t0/rBlPGhvnRzS52NuAkR92Qo5bRb6LdMNdBkWXx5g/OQMx/mKZttTqqdQAbAz7KeEGGW+rFmgfQewe3oh3ByVmiwtiJZehJ7Bzv7CRolekU5R1zhqfSeEzkJ3riNtc7HQ0yeE57FsAe2iLNm+d8/haDRUGoJ6FMaPmSdDauyu6TQmLDWkr4m+MG3h3YHwLkL4c6Ff6dyx4PLd1joacsKGKE3kJoh2jtBghvqphD+YZek6483+W/Bpk1G8CJBfW8Sc3lDUXTqJXkbE7gZ5N9nvjnIPiVfDEegeZ+61woztx+MDIBTcJPZH5d2iiqkhGA8tEXK/3WkvjuQnKQ/gwbe97DFAo8/W/0oh59GuTKmhNRqoorqZnGn6M3G/K6JMTgW9dWfyE9ZYXiJJIv3rCnnm3Hlsvey1UKlAmhGAx4fZ5Qgx73yhGIYmAABvf+2knHxP6iEy95trhCsqWysgxiDEmJXN1PXDJY/89r8z41go0dSvK2gJtujz0o0FhYK1ZgjME3zY1DragcEJEpU6gnuYw9ZFJZuv1USzitpkd89AWZNevPX/MC8/cXjO46d8fyQW7qMHkCohRKFJqdRNat0vOjnv/TW/81ZY9zm8OlCCwfrgu92U89gUtAGGhOQiy+2MYo2YHZ5EpAJVMQvZ9FvtMnlXI=
+    on_success: always
+    on_failure: always
+    template:
+      - "`%{result}` build for repo `%{repository_slug}` on branch `%{branch}`. Build (<%{build_url}|#%{build_number}>). Commit (<%{compare_url}|%{commit}>)."
+      - "Execution time: *%{duration}*"
+      - "Message: *%{message}*"
