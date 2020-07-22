@@ -1,29 +1,31 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { GroupMemberEntity } from "./group-member.entity";
+import admin from "firebase-admin";
+import FieldValue = admin.firestore.FieldValue;
 
-@Entity("groups")
-export class GroupEntity {
+import { BaseEntity } from "./base.entity";
+
+
+export class GroupEntity implements BaseEntity {
     
-    @PrimaryGeneratedColumn("uuid")
+    public static readonly TABLE_NAME = "groups";
+    
     public id?: string;
     
-    @Column({nullable: false})
     public name: string;
     
-    @Column("varchar", {name: "owner_id", nullable: false})
     public ownerId: string;
     
-    @CreateDateColumn({name: "created_at"})
-    public createdAt: Date;
+    public createdAt: FieldValue;
     
-    @UpdateDateColumn({name: "updated_at"})
-    public updatedAt: Date;
+    public updatedAt: FieldValue;
     
-    @OneToMany(
-        () => GroupMemberEntity,
-        member => member.group,
-        {eager: true}
-    )
-    public members: GroupMemberEntity[];
+    public raw(): any {
+        return {
+            id: this.id,
+            name: this.name,
+            ownerId: this.ownerId,
+            createdAt: this.createdAt,
+            updatedAt: this.updatedAt
+        };
+    }
     
 }

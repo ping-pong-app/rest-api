@@ -1,47 +1,46 @@
 import { Route } from "../../config";
 import { authenticateUser } from "../middlewares";
-import { createGroup, deleteGroup, getGroup, getGroups } from "../resources/groups.resources";
-import { getGroupInvites } from "../resources/invitation.resource";
+import { acceptInvite, cancelInvite, getOwnInvites, inviteUser, rejectInvite } from "../resources/invitation.resource";
 
 export const routes: Route[] = [
     {
-        path: "/v1/groups",
+        path: "/v1/invites",
         method: "get",
         handler: [
             authenticateUser,
-            getGroups
+            getOwnInvites
         ]
     },
     {
-        path: "/v1/groups",
+        path: "/v1/invites",
         method: "post",
         handler: [
             authenticateUser,
-            createGroup
+            inviteUser
         ]
     },
     {
-        path: "/v1/groups/:id/invites",
-        method: "get",
+        path: "/v1/invites/:id/accept",
+        method: "post",
         handler: [
             authenticateUser,
-            getGroupInvites
+            acceptInvite
         ]
     },
     {
-        path: "/v1/groups/:id",
-        method: "get",
-        handler: [
-            authenticateUser,
-            getGroup
-        ]
-    },
-    {
-        path: "/v1/groups/:id",
+        path: "/v1/invites/:id/reject",
         method: "delete",
         handler: [
             authenticateUser,
-            deleteGroup
+            rejectInvite
+        ]
+    },
+    {
+        path: "/v1/invites/:id/cancel",
+        method: "delete",
+        handler: [
+            authenticateUser,
+            cancelInvite
         ]
     }
 ];

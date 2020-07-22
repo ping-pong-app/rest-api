@@ -1,13 +1,13 @@
-import { PersistenceManager } from "./pg.config";
 import { MiddlewareSetupFunction, Route } from "./common.models";
 import { Router } from "express";
 import { FirebaseConfig } from "./firebase.config";
 import { CronConfig } from "./cron.config";
+import { EnvConfig } from "./env.config";
 
 
 export const initConfiguration = async () => {
+    await EnvConfig.initialize();
     await FirebaseConfig.initialize();
-    await PersistenceManager.connect();
     await CronConfig.initialize();
 };
 
@@ -24,12 +24,11 @@ export const applyRoutes = (routes: Route[], router: Router) => {
     });
 };
 
-export { PersistenceManager };
 export {
     RouteHandler,
     MiddlewareSetupFunction,
     Route,
-    AuthConfiguration,
     ErrorWithCode,
-    HttpMethod
+    HttpMethod,
+    Environment
 } from "./common.models";

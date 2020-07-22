@@ -6,7 +6,7 @@ export { Ping } from "./ping.model";
 export { Invitation } from "./invitation.model";
 
 export { BaseError } from "./errors/base.error";
-export { Http404Error } from "./errors/not-found.error";
+export { NotFoundError } from "./errors/not-found.error";
 export { ValidationError } from "./errors/validation.error";
 export { UnathorizedError } from "./errors/unathorized.error";
 export { InternalServerError } from "./errors/internal-server.error";

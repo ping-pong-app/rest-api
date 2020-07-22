@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { BaseError, Http404Error, ValidationError } from "../../lib";
+import { BaseError, NotFoundError, ValidationError } from "../../lib";
 import { ErrorWithCode } from "../../config";
 
 
 export const handle404Error = (router: Router) => {
     router.use((_: Request, __: Response) => {
-        throw new Http404Error("Path not found!");
+        throw new NotFoundError("Path not found!");
     });
 };
 

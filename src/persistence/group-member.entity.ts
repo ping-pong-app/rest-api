@@ -1,19 +1,19 @@
-import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
-import { GroupEntity } from "./group.entity";
+import { BaseEntity } from "./base.entity";
 
-@Entity("group_members")
-export class GroupMemberEntity {
+
+export class GroupMemberEntity implements BaseEntity {
     
-    @PrimaryColumn("varchar", {name: "user_id", nullable: false})
+    public static readonly TABLE_NAME = "group_memberships";
+    
     public userId: string;
     
-    @PrimaryColumn("uuid", {name: "group_id"})
-    @ManyToOne(
-        () => GroupEntity,
-        group => group.members,
-        {onDelete: "CASCADE"}
-    )
-    @JoinColumn({name: "group_id"})
-    public group?: GroupEntity;
+    public groupId: string;
+    
+    raw(): any {
+        return {
+            userId: this.userId,
+            groupId: this.groupId
+        };
+    }
     
 }

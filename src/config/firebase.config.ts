@@ -1,8 +1,8 @@
-import admin, { initializeApp, auth, messaging } from "firebase-admin";
+import admin, { initializeApp, auth, messaging, firestore } from "firebase-admin";
 import App = admin.app.App;
 import Auth = admin.auth.Auth;
-import DecodedIdToken = admin.auth.DecodedIdToken;
 import Messaging = admin.messaging.Messaging;
+import Firestore = admin.firestore.Firestore;
 
 
 export class FirebaseConfig {
@@ -13,30 +13,24 @@ export class FirebaseConfig {
     
     private static messaging: Messaging;
     
+    private static db: Firestore;
+    
     public static initialize() {
         const {GOOGLE_APPLICATION_CREDENTIALS} = process.env;
         
         console.log(`Initializing Firebase... Reading service account credentials from '${GOOGLE_APPLICATION_CREDENTIALS}'`);
         FirebaseConfig.application = initializeApp();
+        
         FirebaseConfig.auth = auth();
         console.log("Firebase Authentication component initialized!");
+        
+        FirebaseConfig.db = firestore();
+        console.log("Firebase Cloud Firestore component initialized!");
+        
         FirebaseConfig.messaging = messaging();
         console.log("Firebase Cloud Messaging component initialized!");
         
         console.log("Firebase initialized!");
-    }
-    
-    public static async verifyToken(token: string | undefined): Promise<DecodedIdToken> {
-        if (token) {
-            const bareToken = token.replace("Bearer ", "");
-            try {
-                return await FirebaseConfig.auth.verifyIdToken(bareToken);
-            } catch (err) {
-                throw err;
-            }
-        } else {
-            throw new Error("Token not provided!");
-        }
     }
     
     public static getAuth(): Auth {
@@ -45,6 +39,10 @@ export class FirebaseConfig {
     
     public static getMessaging(): Messaging {
         return FirebaseConfig.messaging;
+    }
+    
+    public static getDatabase(): Firestore {
+        return FirebaseConfig.db;
     }
     
 }

@@ -14,9 +14,8 @@ export type Route = {
     handler: RouteHandler | RouteHandler[]
 };
 
-export type AuthConfiguration = {
-    authServerUrl: string;
-    realm: string;
-    clientId: string;
-    clientSecret?: string;
-};
+export interface Environment {
+    readonly serviceName: string;
+    readonly serviceVersion: string;
+    readonly serviceEnvironment: string;
+}

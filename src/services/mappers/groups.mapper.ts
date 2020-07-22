@@ -1,24 +1,19 @@
-import { GroupEntity, GroupMemberEntity } from "../../persistence";
-import { Group, GroupMember } from "../../lib";
+import admin from "firebase-admin";
+import DocumentSnapshot = admin.firestore.DocumentSnapshot;
+import Timestamp = admin.firestore.Timestamp;
+
+import { Group } from "../../lib";
 
 export class GroupsMapper {
     
-    public static fromEntity(entity: GroupEntity): Group {
+    public static fromEntity(entity: DocumentSnapshot): Group {
         const group = new Group();
         group.id = entity.id;
-        group.name = entity.name;
-        group.ownerId = entity.ownerId;
-        group.createdAt = entity.createdAt;
-        group.updatedAt = entity.updatedAt;
-        group.members = entity.members ?
-            entity.members.map(member => GroupsMapper.fromGroupMemberEntity(member)) : [];
+        group.name = entity.get("name");
+        group.ownerId = entity.get("ownerId");
+        group.updatedAt = (entity.get("updatedAt") as Timestamp).toDate();
+        group.createdAt = (entity.get("createdAt") as Timestamp).toDate();
         return group;
-    }
-    
-    public static fromGroupMemberEntity(entity: GroupMemberEntity): GroupMember {
-        const member = new GroupMember();
-        member.userId = entity.userId;
-        return member;
     }
     
 }

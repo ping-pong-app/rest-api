@@ -4,6 +4,7 @@ import compression from "compression";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
+import { versionInfoFilter } from "./filters";
 
 
 export const handleCors = (router: Router) => {
@@ -28,4 +29,8 @@ export const handleCookieParsing = (router: Router) => {
 
 export const handleBasicSecurity = (router: Router) => {
     router.use(helmet());
+};
+
+export const handleVersionInfo = (router: Router) => {
+    router.use(versionInfoFilter);
 };

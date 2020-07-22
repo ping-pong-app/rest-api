@@ -4,7 +4,8 @@ import {
     handleBodyRequestParsing,
     handleCompression,
     handleCookieParsing,
-    handleCors
+    handleCors,
+    handleVersionInfo
 } from "./common.middlewares";
 import { handle404Error, handleCustomError, handleUnknownError } from "./error.middlewares";
 import {
@@ -13,7 +14,7 @@ import {
     FcmSchemaServlet,
 } from "./servlets";
 
-export { developmentModeFilter, authenticateUser } from "./filters";
+export { developmentModeFilter, authenticateUser, versionInfoFilter } from "./filters";
 
 export const middlewares: MiddlewareSetupFunction[] = [
     handleCors,
@@ -24,6 +25,7 @@ export const middlewares: MiddlewareSetupFunction[] = [
     SwaggerServlet,
     SwaggerUIServlet,
     FcmSchemaServlet,
+    handleVersionInfo
 ];
 
 export const errorMiddlewares: MiddlewareSetupFunction[] = [

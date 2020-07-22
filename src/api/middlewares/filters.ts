@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { FirebaseConfig } from "../../config/firebase.config";
+import { FirebaseService } from "../../services";
+import { EnvConfig } from "../../config/env.config";
 
 export const developmentModeFilter = async (req: Request, res: Response, next: NextFunction) => {
     const {NODE_ENV} = process.env;
@@ -10,10 +11,21 @@ export const developmentModeFilter = async (req: Request, res: Response, next: N
     }
 };
 
+export const versionInfoFilter = async (req: Request, res: Response, next: NextFunction) => {
+    
+    const env = EnvConfig.getEnvironment();
+    
+    res.header("X-Service-Name", env.serviceName);
+    res.header("X-Service-Version", env.serviceVersion);
+    res.header("X-Service-Env", env.serviceEnvironment);
+    
+    next();
+};
+
 export const authenticateUser = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.header("Authorization");
     try {
-        res.locals.jwt = await FirebaseConfig.verifyToken(token);
+        res.locals.jwt = await FirebaseService.verifyToken(token);
         next();
     } catch (err) {
         res.status(401)

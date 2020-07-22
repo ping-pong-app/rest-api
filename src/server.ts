@@ -2,7 +2,6 @@ import http from "http";
 import "express-async-errors";
 import express from "express";
 import { applyMiddleware, applyRoutes, initConfiguration } from "./config";
-import "reflect-metadata";
 
 
 const router = express();

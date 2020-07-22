@@ -1,5 +1,4 @@
 import { HealthCheck, HealthcheckReport } from "../lib";
-import { PersistenceManager } from "../config";
 
 
 export class ActuatorService {
@@ -20,7 +19,8 @@ export class ActuatorService {
     private static async databaseCheck(): Promise<HealthCheck> {
         const check = new HealthCheck("DataSourceHealthCheck");
         try {
-            await PersistenceManager.getInstance().query("SELECT NOW()");
+            // Replace with firestore if aplicable:
+            // await PersistenceManager.getInstance().query("SELECT NOW()");
             check.up();
         } catch (err) {
             console.error(err);
