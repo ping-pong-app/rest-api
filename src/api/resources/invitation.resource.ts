@@ -3,7 +3,7 @@ import admin from "firebase-admin";
 import DecodedIdToken = admin.auth.DecodedIdToken;
 import { getTokenPayload } from "./common";
 import { InvitationService } from "../../services";
-import { Invitation } from "../../lib";
+import { Invitation, Rest } from "../../lib";
 
 export const getOwnInvites = async (req: Request, res: Response) => {
     getTokenPayload(res,
@@ -12,12 +12,12 @@ export const getOwnInvites = async (req: Request, res: Response) => {
             
             const invitations = await InvitationService.getUserInvites(userId);
             
-            res.status(200)
-                .header("X-Total-Count", invitations.count.toString(10))
+            res.status(Rest.STATUS_OK)
+                .header(Rest.X_TOTAL_COUNT, invitations.count.toString(10))
                 .json(invitations.entities);
             
         }, () => {
-            res.status(401).send();
+            res.status(Rest.STATUS_UNAUTHORIZED).send();
         });
 };
 
@@ -29,12 +29,12 @@ export const getGroupInvites = async (req: Request, res: Response) => {
             
             const invitations = await InvitationService.getGroupInvites(userId, groupId);
             
-            res.status(200)
-                .header("X-Total-Count", invitations.count.toString(10))
+            res.status(Rest.STATUS_OK)
+                .header(Rest.X_TOTAL_COUNT, invitations.count.toString(10))
                 .json(invitations.entities);
             
         }, () => {
-            res.status(401).send();
+            res.status(Rest.STATUS_UNAUTHORIZED).send();
         });
 };
 
@@ -45,9 +45,9 @@ export const inviteUser = async (req: Request<{}, {}, Invitation, {}>, res: Resp
             
             await InvitationService.inviteUser(req.body, userId);
             
-            res.status(201).send();
+            res.status(Rest.STATUS_CREATED).send();
         }, () => {
-            res.status(401).send();
+            res.status(Rest.STATUS_UNAUTHORIZED).send();
         });
 };
 
@@ -59,9 +59,9 @@ export const acceptInvite = async (req: Request, res: Response) => {
             
             await InvitationService.acceptInvite(invitationId, userId);
             
-            res.status(204).send();
+            res.status(Rest.STATUS_NO_CONTENT).send();
         }, () => {
-            res.status(401).send();
+            res.status(Rest.STATUS_UNAUTHORIZED).send();
         });
 };
 
@@ -73,9 +73,9 @@ export const rejectInvite = async (req: Request, res: Response) => {
             
             await InvitationService.rejectInvite(invitationId, userId);
             
-            res.status(204).send();
+            res.status(Rest.STATUS_NO_CONTENT).send();
         }, () => {
-            res.status(401).send();
+            res.status(Rest.STATUS_UNAUTHORIZED).send();
         });
 };
 
@@ -87,8 +87,8 @@ export const cancelInvite = async (req: Request, res: Response) => {
             
             await InvitationService.cancelInvite(invitationId, userId);
             
-            res.status(204).send();
+            res.status(Rest.STATUS_NO_CONTENT).send();
         }, () => {
-            res.status(401).send();
+            res.status(Rest.STATUS_UNAUTHORIZED).send();
         });
 };

@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { FirebaseService } from "../../services";
 import { EnvConfig } from "../../config/env.config";
+import { Rest } from "../../lib";
 
 export const developmentModeFilter = async (req: Request, res: Response, next: NextFunction) => {
     const {NODE_ENV} = process.env;
     if (NODE_ENV === "production") {
-        res.status(403).send();
+        res.status(Rest.STATUS_FORBIDDEN).send();
     } else {
         next();
     }
@@ -15,24 +16,24 @@ export const versionInfoFilter = async (req: Request, res: Response, next: NextF
     
     const env = EnvConfig.getEnvironment();
     
-    res.header("X-Service-Name", env.serviceName);
-    res.header("X-Service-Version", env.serviceVersion);
-    res.header("X-Service-Env", env.serviceEnvironment);
+    res.header(Rest.X_SERVICE_NAME, env.serviceName);
+    res.header(Rest.X_SERVICE_VERSION, env.serviceVersion);
+    res.header(Rest.X_SERVICE_ENV, env.serviceEnvironment);
     
     next();
 };
 
 export const authenticateUser = async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.header("Authorization");
+    const token = req.header(Rest.AUTHORIZATION);
     try {
         res.locals.jwt = await FirebaseService.verifyToken(token);
         next();
     } catch (err) {
-        res.status(401)
-            .header("WWW-Authenticate", "Bearer realm=\"ping-pong\", charset=\"UTF-8\"")
+        res.status(Rest.STATUS_UNAUTHORIZED)
+            .header(Rest.WWW_AUTHENTICATE, "Bearer realm=\"ping-pong\", charset=\"UTF-8\"")
             .json({
                 error: "Unauthorized!",
-                status: 401
+                status: Rest.STATUS_UNAUTHORIZED
             });
     }
 };

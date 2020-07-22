@@ -1,7 +1,8 @@
 import { BaseError } from "./base.error";
+import { Rest } from "../rest.models";
 
 export class ValidationError extends BaseError {
-    readonly statusCode = 422;
+    readonly statusCode = Rest.STATUS_UNPROCESSABLE_ENTITY;
     public entity: string;
     public fieldName: string;
     

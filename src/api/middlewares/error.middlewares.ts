@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { BaseError, NotFoundError, ValidationError } from "../../lib";
+import { BaseError, NotFoundError, Rest, ValidationError } from "../../lib";
 import { ErrorWithCode } from "../../config";
 
 
@@ -44,13 +44,13 @@ export const handleUnknownError = (router: Router) => {
     router.use((err: ErrorWithCode, req: Request, res: Response, _: NextFunction) => {
         console.error(err);
         if (process.env.NODE_ENV === "production") {
-            res.status(500).json({
-                status: 500,
+            res.status(Rest.STATUS_INTERNAL_SERVER_ERROR).json({
+                status: Rest.STATUS_INTERNAL_SERVER_ERROR,
                 message: err.message
             });
         } else {
-            res.status(500).json({
-                status: 500,
+            res.status(Rest.STATUS_INTERNAL_SERVER_ERROR).json({
+                status: Rest.STATUS_INTERNAL_SERVER_ERROR,
                 message: err.message,
                 stack: err.stack
             });

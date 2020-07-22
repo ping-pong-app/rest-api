@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { GroupsService } from "../../services";
-import { Group, QueryBuilder, RequestQuery } from "../../lib";
+import { Group, QueryBuilder, RequestQuery, Rest } from "../../lib";
 import admin from "firebase-admin";
 import DecodedIdToken = admin.auth.DecodedIdToken;
 import { getTokenPayload } from "./common";
@@ -18,12 +18,12 @@ export const getGroups = async (req: Request, res: Response) => {
             const userId = payload.uid;
             const entityList = await GroupsService.findAll(queryParams, userId);
             
-            res.status(200)
-                .header("X-Total-Count", entityList.count.toString(10))
+            res.status(Rest.STATUS_OK)
+                .header(Rest.X_TOTAL_COUNT, entityList.count.toString(10))
                 .json(entityList.entities);
         },
         () => {
-            res.status(401).send();
+            res.status(Rest.STATUS_UNAUTHORIZED).send();
         });
 };
 
@@ -35,10 +35,10 @@ export const getGroup = async (req: Request, res: Response) => {
             
             const ownerId = payload.uid;
             const group = await GroupsService.find(groupId, ownerId);
-            res.status(200).json(group);
+            res.status(Rest.STATUS_OK).json(group);
         },
         () => {
-            res.status(401).send();
+            res.status(Rest.STATUS_UNAUTHORIZED).send();
         });
 };
 
@@ -51,12 +51,12 @@ export const createGroup = async (req: Request<{}, Group, Group, {}>, res: Respo
             const ownerId = payload.uid;
             const createdGroup = await GroupsService.create(group, ownerId);
             
-            res.status(201)
-                .header("Location", "/v1/groups/" + createdGroup.id)
+            res.status(Rest.STATUS_CREATED)
+                .header(Rest.LOCATION, "/v1/groups/" + createdGroup.id)
                 .json(createdGroup);
         },
         () => {
-            res.status(401).send();
+            res.status(Rest.STATUS_UNAUTHORIZED).send();
         });
     
 };
@@ -68,9 +68,9 @@ export const deleteGroup = async (req: Request, res: Response) => {
         async (payload: DecodedIdToken) => {
             const ownerId = payload.uid;
             await GroupsService.delete(groupId, ownerId);
-            res.status(204).send();
+            res.status(Rest.STATUS_NO_CONTENT).send();
         },
         () => {
-            res.status(401).send();
+            res.status(Rest.STATUS_UNAUTHORIZED).send();
         });
 };
