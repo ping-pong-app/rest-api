@@ -18,13 +18,18 @@ export class GroupsService {
     
     public static async findAll(queryParams: QueryParameters, userId: string): Promise<EntityList<Group>> {
         const groupIds = await GroupsService.getGroupsUserBelongsTo(userId);
-        const queryResult = await FirebaseService.getDatabase().getAll(...groupIds);
         
-        const groups = queryResult.map(row => {
-            return GroupsMapper.fromEntity(row);
-        });
-        
-        return new EntityList<Group>(groups, groups.length);
+        if (groupIds.length > 0) {
+            const queryResult = await FirebaseService.getDatabase().getAll(...groupIds);
+    
+            const groups = queryResult.map(row => {
+                return GroupsMapper.fromEntity(row);
+            });
+    
+            return new EntityList<Group>(groups, groups.length);
+        } else {
+            return new EntityList<Group>([], 0);
+        }
     }
     
     public static async find(groupId: string, userId: string): Promise<Group> {
