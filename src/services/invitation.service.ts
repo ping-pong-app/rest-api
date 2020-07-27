@@ -82,7 +82,7 @@ export class InvitationService {
             .doc(invitationId)
             .get();
         
-        if (invitation.exists) {
+        if (invitation.exists && invitation.get("userId") === userId) {
             
             await GroupsService.addUserToGroup(invitation.get("groupId"), invitation.get("userId"));
             

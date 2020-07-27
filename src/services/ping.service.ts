@@ -6,8 +6,8 @@ import { Validator } from "./validator";
 export class PingService {
     
     public static async pingGroup(ping: Ping, userId: string) {
-        Validator.assertNotNull(ping);
-        Validator.assertNotBlank(ping.groupId);
+        Validator.assertNotNull(ping, null, "Ping");
+        Validator.assertNotBlank(ping.groupId, "groupId", "Ping");
         
         if (await GroupsService.isMemberOfGroup(userId, ping.groupId)) {
             const topic = `PING.${ping.groupId}`;
