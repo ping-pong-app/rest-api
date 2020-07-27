@@ -394,14 +394,21 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schema/Invitation"
+                                "$ref": "#/components/schemas/Invitation"
                             }
                         }
                     }
                 },
                 "responses": {
                     "201": {
-                        "description": "User was invited to the group"
+                        "description": "User was invited to the group",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EntityIdentifier"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Group not found",

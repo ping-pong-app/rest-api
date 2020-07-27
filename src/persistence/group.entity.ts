@@ -20,7 +20,6 @@ export class GroupEntity implements BaseEntity {
     
     public raw(): any {
         return {
-            id: this.id,
             name: this.name,
             ownerId: this.ownerId,
             createdAt: this.createdAt,

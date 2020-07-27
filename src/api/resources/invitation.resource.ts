@@ -43,9 +43,9 @@ export const inviteUser = async (req: Request<{}, {}, Invitation, {}>, res: Resp
         async (payload: DecodedIdToken) => {
             const userId = payload.uid;
             
-            await InvitationService.inviteUser(req.body, userId);
+            const identifier = await InvitationService.inviteUser(req.body, userId);
             
-            res.status(Rest.STATUS_CREATED).send();
+            res.status(Rest.STATUS_CREATED).json(identifier);
         }, () => {
             res.status(Rest.STATUS_UNAUTHORIZED).send();
         });
