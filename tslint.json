@@ -52,6 +52,7 @@
             }
         ],
         "max-classes-per-file": false,
-        "object-literal-key-quotes": false
+        "object-literal-key-quotes": false,
+        "no-namespace": false
     }
 }

@@ -2,6 +2,7 @@ import { NotFoundError, Ping } from "../lib";
 import { FirebaseService } from "./firebase.service";
 import { GroupsService } from "./groups.service";
 import { Validator } from "./validator";
+import { Logger } from "./logger";
 
 export class PingService {
     
@@ -15,6 +16,7 @@ export class PingService {
                 userId,
                 groupId: ping.groupId
             };
+            Logger.info("User %s pinged group %s!", userId, ping.groupId);
             await FirebaseService.sendCloudMessage(topic, data);
         } else {
             throw new NotFoundError("Group not found!");

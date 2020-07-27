@@ -6,6 +6,7 @@ import Firestore = admin.firestore.Firestore;
 
 import { FirebaseConfig } from "../config/firebase.config";
 import { BadRequestError, Optional } from "../lib";
+import { Logger } from "./logger";
 
 
 export class FirebaseService {
@@ -55,6 +56,7 @@ export class FirebaseService {
         
         const message: Message = {topic, data};
         await FirebaseConfig.getMessaging().send(message);
+        Logger.debug("Message sent to Firebase Cloud Messaging!");
     }
     
 }

@@ -1,10 +1,12 @@
 import http from "http";
 import "express-async-errors";
 import express from "express";
-import { applyMiddleware, applyRoutes, initConfiguration } from "./config";
+import { applyMiddleware, applyRoutes, initConfiguration, initServerConfiguration } from "./config";
 
 
 const router = express();
+
+initServerConfiguration(router);
 
 import { errorMiddlewares, middlewares } from "./api/middlewares";
 applyMiddleware(middlewares, router);
