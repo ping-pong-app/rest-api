@@ -74,8 +74,6 @@ export const rejectInvite = async (req: Request, res: Response) => {
             await InvitationService.rejectInvite(invitationId, userId);
             
             res.status(Rest.STATUS_NO_CONTENT).send();
-        }, () => {
-            res.status(Rest.STATUS_UNAUTHORIZED).send();
         });
 };
 

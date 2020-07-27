@@ -13,7 +13,6 @@ export class InvitationEntity implements BaseEntity {
     
     raw(): any {
         return {
-            id: this.id,
             userId: this.userId,
             groupId: this.groupId
         };

@@ -46,16 +46,16 @@ export class InvitationService {
         
         
         if (await GroupsService.isOwnerOfGroup(userId, invitation.groupId)) {
+    
+            const user = await FirebaseService.checkIfUserExists(invitation.email);
             
             const existingInvitation = await FirebaseService.getDatabase()
                 .collection(InvitationEntity.TABLE_NAME)
-                .where("userId", "==", invitation.userId)
+                .where("userId", "==", user.uid)
                 .where("groupId", "==", invitation.groupId)
                 .get();
             
             if (existingInvitation.empty) {
-                
-                const user = await FirebaseService.checkIfUserExists(invitation.email);
                 
                 const invite = new InvitationEntity();
                 invite.groupId = invitation.groupId;
@@ -84,7 +84,7 @@ export class InvitationService {
         
         if (invitation.exists) {
             
-            await GroupsService.addUserToGroup(invitation.get("groupId"), userId);
+            await GroupsService.addUserToGroup(invitation.get("groupId"), invitation.get("userId"));
             
             await FirebaseService.getDatabase()
                 .collection(InvitationEntity.TABLE_NAME)
