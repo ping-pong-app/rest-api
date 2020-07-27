@@ -3,7 +3,12 @@ import { Router } from "express";
 import { FirebaseConfig } from "./firebase.config";
 import { CronConfig } from "./cron.config";
 import { EnvConfig } from "./env.config";
+import { LogConfig } from "./log.config";
 
+
+export const initServerConfiguration = (router: Router) => {
+    router.use(LogConfig.getLoggerMiddleware());
+};
 
 export const initConfiguration = async () => {
     await EnvConfig.initialize();

@@ -13,18 +13,24 @@ import { Validator } from "./validator";
 import { FirebaseService } from "./firebase.service";
 import { GroupEntity, GroupMembershipEntity, InvitationEntity } from "../persistence";
 import { InvitationMapper } from "./mappers/invitation.mapper";
+import { Logger } from "./logger";
 
 export class GroupsService {
     
     public static async findAll(queryParams: QueryParameters, userId: string): Promise<EntityList<Group>> {
         const groupIds = await GroupsService.getGroupsUserBelongsTo(userId);
-        const queryResult = await FirebaseService.getDatabase().getAll(...groupIds);
         
-        const groups = queryResult.map(row => {
-            return GroupsMapper.fromEntity(row);
-        });
-        
-        return new EntityList<Group>(groups, groups.length);
+        if (groupIds.length > 0) {
+            const queryResult = await FirebaseService.getDatabase().getAll(...groupIds);
+    
+            const groups = queryResult.map(row => {
+                return GroupsMapper.fromEntity(row);
+            });
+    
+            return new EntityList<Group>(groups, groups.length);
+        } else {
+            return new EntityList<Group>([], 0);
+        }
     }
     
     public static async find(groupId: string, userId: string): Promise<Group> {
@@ -88,6 +94,8 @@ export class GroupsService {
         
         await GroupsService.addUserToGroup(savedEntity.id, ownerId);
         
+        Logger.info("Group with id %s was created!", savedEntity.id);
+        
         return new EntityIdentifier(savedEntity.id);
     }
     
@@ -124,6 +132,8 @@ export class GroupsService {
                 });
                 await batch.commit();
             }
+    
+            Logger.info("Group with id %s was deleted!", groupId);
         } else {
             throw new NotFoundError("Group with given id doesn't exist!");
         }
