@@ -10,3 +10,4 @@ export { GroupsMapper } from "./mappers/groups.mapper";
 export { InvitationMapper } from "./mappers/invitation.mapper";
 
 export { TimeUtil } from "./utils/time.util";
+export { DatabaseUtil } from "./utils/database.util";

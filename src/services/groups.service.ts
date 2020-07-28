@@ -15,6 +15,7 @@ import { FirebaseService } from "./firebase.service";
 import { GroupEntity, GroupMembershipEntity, InvitationEntity } from "../persistence";
 import { InvitationMapper } from "./mappers/invitation.mapper";
 import { Logger } from "./logger";
+import { DatabaseUtil } from "./utils/database.util";
 
 export class GroupsService {
     
@@ -23,11 +24,11 @@ export class GroupsService {
         
         if (groupIds.length > 0) {
             const queryResult = await FirebaseService.getDatabase().getAll(...groupIds);
-    
+            
             const groups = queryResult.map(row => {
                 return GroupsMapper.fromEntity(row);
             });
-    
+            
             return new EntityList<Group>(groups, groups.length);
         } else {
             return new EntityList<Group>([], 0);
@@ -112,28 +113,16 @@ export class GroupsService {
                 .where("groupId", "==", groupId)
                 .get();
             
-            if (membersRef.size > 0) {
-                const batch = FirebaseService.getDatabase().batch();
-                membersRef.docs.forEach(doc => {
-                    batch.delete(doc.ref);
-                });
-                await batch.commit();
-            }
-    
+            await DatabaseUtil.deleteQuery(membersRef);
+            
             // Delete group invitations
             const invitesRef = await FirebaseService.getDatabase()
                 .collection(InvitationEntity.TABLE_NAME)
                 .where("groupId", "==", groupId)
                 .get();
             
-            if (invitesRef.size > 0) {
-                const batch = FirebaseService.getDatabase().batch();
-                invitesRef.docs.forEach(doc => {
-                    batch.delete(doc.ref);
-                });
-                await batch.commit();
-            }
-    
+            await DatabaseUtil.deleteQuery(invitesRef);
+            
             Logger.info("Group with id %s was deleted!", groupId);
         } else {
             throw new NotFoundError("Group with given id doesn't exist!");
@@ -147,7 +136,7 @@ export class GroupsService {
                 .collection(GroupEntity.TABLE_NAME)
                 .doc(groupId)
                 .get();
-    
+            
             if (group.get("ownerId") !== userId) {
                 
                 const membershipRef = await FirebaseService.getDatabase()
@@ -156,13 +145,7 @@ export class GroupsService {
                     .where("userId", "==", userId)
                     .get();
                 
-                if (membershipRef.size > 0) {
-                    const batch = FirebaseService.getDatabase().batch();
-                    membershipRef.docs.forEach(doc => {
-                        batch.delete(doc.ref);
-                    });
-                    await batch.commit();
-                }
+                await DatabaseUtil.deleteQuery(membershipRef);
             } else {
                 throw new BadRequestError("Owner cannot leave group!");
             }

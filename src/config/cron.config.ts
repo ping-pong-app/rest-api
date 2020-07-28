@@ -1,15 +1,15 @@
 import { CronJob } from "cron";
-import { FirebaseService, TimeUtil } from "../services";
+import { DatabaseUtil, FirebaseService, TimeUtil } from "../services";
 import { InvitationEntity } from "../persistence";
 
 export class CronConfig {
     
-    private static readonly CRON_DAILY_AT_3_15_AM= "15 3 * * *";
+    private static readonly CRON_DAILY_AT_3_15_AM = "15 3 * * *";
     private static readonly HOURS_72 = 72;
     private static readonly MINUTES_30_MILLIS = 30 * 60 * 1000;
     
     public static initialize() {
-       CronConfig.scheduleInvitationCleanup();
+        CronConfig.scheduleInvitationCleanup();
     }
     
     private static scheduleInvitationCleanup() {
@@ -21,20 +21,14 @@ export class CronConfig {
                     .collection(InvitationEntity.TABLE_NAME)
                     .where("createdAt", "<", threeDaysBack)
                     .get();
-    
-                if (invitesRef.size > 0) {
-                    const batch = FirebaseService.getDatabase().batch();
-                    invitesRef.docs.forEach(doc => {
-                        batch.delete(doc.ref);
-                    });
-                    await batch.commit();
-                }
+                
+                await DatabaseUtil.deleteQuery(invitesRef);
                 console.log(`Cron jon 'INVITE_CLEANUP' ran successfully at ${new Date().toISOString()}`);
             } catch (err) {
                 console.error("Cron job 'INVITE_CLEANUP' has failed!");
             }
         });
-    
+        
         const startTime = new Date();
         startTime.setMilliseconds(startTime.getMilliseconds() + CronConfig.MINUTES_30_MILLIS);
         
