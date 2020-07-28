@@ -211,8 +211,41 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schema/GroupMembership"
+                                        "$ref": "#/components/schemas/GroupMembership"
                                     }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Group not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{id}/leave": {
+            "delete": {
+                "tags": ["group"],
+                "summary": "Leave group",
+                "description": "Removes user from the group",
+                "operationId": "leaveGroup",
+                "responses": {
+                    "204": {
+                        "description": "User left the group"
+                    },
+                    "400": {
+                        "description": "Invalid call - most common due to the user leaving being also group owner",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
                                 }
                             }
                         }

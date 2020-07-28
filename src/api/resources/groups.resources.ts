@@ -25,6 +25,7 @@ export const getGroup = async (req: Request, res: Response) => {
     const payload = getTokenPayload(res);
     const ownerId = payload.uid;
     const group = await GroupsService.find(groupId, ownerId);
+    
     res.status(Rest.STATUS_OK).json(group);
 };
 
@@ -34,6 +35,7 @@ export const getGroupMembers = async (req: Request, res: Response) => {
     const userId = payload.uid;
     
     const members = await GroupsService.findGroupMembers(groupId, userId);
+    
     res.status(Rest.STATUS_OK)
         .header(Rest.X_TOTAL_COUNT, members.count.toString(10))
         .json(members.entities);
@@ -54,6 +56,16 @@ export const deleteGroup = async (req: Request, res: Response) => {
     const groupId = req.params.id;
     const payload = getTokenPayload(res);
     const ownerId = payload.uid;
+    
     await GroupsService.delete(groupId, ownerId);
+    res.status(Rest.STATUS_NO_CONTENT).send();
+};
+
+export const leaveGroup = async (req: Request, res: Response) => {
+    const groupId = req.params.id;
+    const payload = getTokenPayload(res);
+    const userId = payload.uid;
+    
+    await GroupsService.leaveGroup(groupId, userId);
     res.status(Rest.STATUS_NO_CONTENT).send();
 };

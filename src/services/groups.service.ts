@@ -1,6 +1,7 @@
 import admin from "firebase-admin";
 import DocumentReference = admin.firestore.DocumentReference;
 import {
+    BadRequestError,
     EntityIdentifier,
     EntityList,
     Group,
@@ -136,6 +137,37 @@ export class GroupsService {
             Logger.info("Group with id %s was deleted!", groupId);
         } else {
             throw new NotFoundError("Group with given id doesn't exist!");
+        }
+    }
+    
+    public static async leaveGroup(groupId: string, userId: string): Promise<void> {
+        if (await GroupsService.isMemberOfGroup(userId, groupId)) {
+            
+            const group = await FirebaseService.getDatabase()
+                .collection(GroupEntity.TABLE_NAME)
+                .doc(groupId)
+                .get();
+    
+            if (group.get("ownerId") !== userId) {
+                
+                const membershipRef = await FirebaseService.getDatabase()
+                    .collection(GroupMembershipEntity.TABLE_NAME)
+                    .where("groupId", "==", groupId)
+                    .where("userId", "==", userId)
+                    .get();
+                
+                if (membershipRef.size > 0) {
+                    const batch = FirebaseService.getDatabase().batch();
+                    membershipRef.docs.forEach(doc => {
+                        batch.delete(doc.ref);
+                    });
+                    await batch.commit();
+                }
+            } else {
+                throw new BadRequestError("Owner cannot leave group!");
+            }
+        } else {
+            throw new NotFoundError("Group not found!");
         }
     }
     
