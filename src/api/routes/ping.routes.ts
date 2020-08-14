@@ -5,7 +5,7 @@ import { getPingResponses, handlePingResponse, performPing } from "../resources/
 
 export const routes: Route[] = [
     {
-        path: "/v1/ping/:id",
+        path: "/v1/ping/list/:id",
         method: "get",
         handler: [
             authenticateUser,

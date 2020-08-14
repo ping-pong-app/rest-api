@@ -403,6 +403,56 @@
                 }
             }
         },
+        "/ping/list/{id}": {
+            "get": {
+                "tags": ["ping"],
+                "summary": "Get list of pings",
+                "description": "Returns list of user responses for ping",
+                "operationId": "getPingResponses",
+                "responses": {
+                    "200": {
+                        "description": "Returns list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PingAggregated"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ping/response": {
+            "post": {
+                "tags": ["ping"],
+                "summary": "Submit response to ping",
+                "description": "Submits response for a given ping",
+                "operationId": "handlePingResponse",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PingResponse"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Response submitted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EntityIdentifier"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/invites": {
             "get": {
                 "tags": [
@@ -767,8 +817,71 @@
             "Ping": {
                 "type": "object",
                 "properties": {
+                    "id": {
+                        "type": "string"
+                    },
                     "groupId": {
                         "type": "string"
+                    },
+                    "pingerId": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "any"
+                    },
+                    "updatedAt": {
+                        "type": "any"
+                    }
+                }
+            },
+            "PingResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "pingId": {
+                        "type": "string"
+                    },
+                    "response": {
+                        "type": "string",
+                        "enum": ["PONG","REJECT"]
+                    },
+                    "userId": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PingAggregated": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "groupId": {
+                        "type": "string"
+                    },
+
+                    "pingerId": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "string"
+                    },
+                    "responses": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PingResponse"
+                        }
                     }
                 }
             },
