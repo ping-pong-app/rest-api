@@ -1,5 +1,5 @@
 import { CronJob } from "cron";
-import { DatabaseUtil, FirebaseService, TimeUtil } from "../services";
+import { DatabaseUtil, FirebaseService, getNHoursBack } from "../services";
 import { InvitationEntity } from "../persistence";
 
 export class CronConfig {
@@ -15,7 +15,7 @@ export class CronConfig {
     private static scheduleInvitationCleanup() {
         const cronJob = new CronJob(CronConfig.CRON_DAILY_AT_3_15_AM, async () => {
             try {
-                const threeDaysBack = TimeUtil.getNHoursBack(CronConfig.HOURS_72);
+                const threeDaysBack = getNHoursBack(CronConfig.HOURS_72);
                 
                 const invitesRef = await FirebaseService.getDatabase()
                     .collection(InvitationEntity.TABLE_NAME)

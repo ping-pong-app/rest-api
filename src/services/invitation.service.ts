@@ -65,8 +65,17 @@ export class InvitationService {
                     .collection(InvitationEntity.TABLE_NAME)
                     .add(invite.raw());
                 
+                const group = await GroupsService.find(invite.groupId, userId);
+                
                 // Notify user of invite (push notification)
-                await InvitationService.notifyUserOnInvite(savedEntity.id, user.uid);
+                const topic = `INVITE.${user.uid}`;
+                const data = {
+                    invitationId: savedEntity.id,
+                    groupId: group.id,
+                    groupName: group.name
+                };
+                await FirebaseService.sendCloudMessage(topic, data);
+                
                 return new EntityIdentifier(savedEntity.id);
             } else {
                 throw new ConflictError("Invitation for given user already exists!");
@@ -90,6 +99,12 @@ export class InvitationService {
                 .collection(InvitationEntity.TABLE_NAME)
                 .doc(invitation.id)
                 .delete();
+            
+            const topic = `INVITE.GROUP.${invitation.get("groupId")}`;
+            const data = {
+                groupId: invitation.get("groupId"),
+            };
+            await FirebaseService.sendCloudMessage(topic, data);
             
         } else {
             throw new NotFoundError("Invitation not found!");
@@ -128,15 +143,6 @@ export class InvitationService {
         } else {
             throw new NotFoundError("Invitation not found!");
         }
-    }
-    
-    private static async notifyUserOnInvite(invitationId: string, userId: string) {
-        const topic = `INVITE.${userId}`;
-        const data = {
-            invitationId,
-            userId
-        };
-        await FirebaseService.sendCloudMessage(topic, data);
     }
     
 }

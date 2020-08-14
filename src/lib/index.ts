@@ -12,6 +12,8 @@ export { GroupMembership } from "./group-member.model";
 export { Ping } from "./ping.model";
 export { Invitation } from "./invitation.model";
 export { Rest } from "./rest.models";
+export { PingResponseType } from "./enums/ping-response.type";
+export { PingResponse, PingAggregated } from "./ping-response.model";
 
 export { BaseError } from "./errors/base.error";
 export { NotFoundError } from "./errors/not-found.error";

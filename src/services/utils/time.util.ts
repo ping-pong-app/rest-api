@@ -1,10 +1,10 @@
-
-export class TimeUtil {
-    
-    public static getNHoursBack(hours: number): Date {
-        const time = new Date();
-        time.setHours(time.getHours() - hours);
-        return time;
-    }
-    
+export function getNHoursBack(hours: number): Date {
+    const time = new Date();
+    time.setHours(time.getHours() - hours);
+    return time;
 }
+
+export const SECOND = 1000;
+export const MINUTE = 60 * SECOND;
+export const HOUR = 60 * MINUTE;
+export const DAY = 24 * HOUR;

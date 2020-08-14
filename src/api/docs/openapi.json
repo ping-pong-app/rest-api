@@ -68,7 +68,14 @@
                                     "type": "array",
                                     "items": {
                                         "$ref": "#/components/schemas/Group"
-                                    }
+                                    },
+                                    "example": [
+                                        {
+                                            "id": "abcde123",
+                                            "name": "Test group",
+                                            "ownerId": "klmnop456"
+                                        }
+                                    ]
                                 }
                             }
                         }
@@ -88,6 +95,10 @@
                         "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/Group"
+                            },
+                            "example": {
+                                "name": "Test group",
+                                "ownerId": "abcde123"
                             }
                         }
                     }
@@ -100,13 +111,17 @@
                                 "description": "Path to created group",
                                 "schema": {
                                     "type": "string"
-                                }
+                                },
+                                "example": "/v1/groups/abcde123"
                             }
                         },
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/EntityIdentifier"
+                                },
+                                "example": {
+                                    "id": "abcde123"
                                 }
                             }
                         }
@@ -117,6 +132,13 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ValidationError"
+                                },
+                                "example": {
+                                    "status": "422",
+                                    "name": "ValidationError",
+                                    "message": "Field must not be blank!",
+                                    "entity": "Group",
+                                    "fieldName": "name"
                                 }
                             }
                         }
@@ -139,7 +161,8 @@
                         "required": true,
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "abcde123"
                     }
                 ],
                 "responses": {
@@ -159,7 +182,14 @@
                                     "type": "array",
                                     "items": {
                                         "$ref": "#/components/schemas/Invitation"
-                                    }
+                                    },
+                                    "example": [
+                                        {
+                                            "id": "abcde123",
+                                            "groupId": "klmnop456",
+                                            "userId": "rstuvw789"
+                                        }
+                                    ]
                                 }
                             }
                         }
@@ -428,6 +458,10 @@
                         "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/Invitation"
+                            },
+                            "example": {
+                                "email": "john.doe@mail.com",
+                                "groupId": "abcde123"
                             }
                         }
                     }

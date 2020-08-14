@@ -4,6 +4,7 @@ import { FirebaseConfig } from "./firebase.config";
 import { CronConfig } from "./cron.config";
 import { EnvConfig } from "./env.config";
 import { LogConfig } from "./log.config";
+import { PingService } from "../services";
 
 
 export const initServerConfiguration = (router: Router) => {
@@ -14,6 +15,7 @@ export const initConfiguration = async () => {
     await EnvConfig.initialize();
     await FirebaseConfig.initialize();
     await CronConfig.initialize();
+    await PingService.initialize();
 };
 
 export const applyMiddleware = (setupFunctions: MiddlewareSetupFunction[], router: Router) => {
