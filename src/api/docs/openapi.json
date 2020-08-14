@@ -15,7 +15,7 @@
             "description": "Local development environment"
         },
         {
-            "url": "https://test.mjamsek.com/v1",
+            "url": "https://api.pinger.group/v1",
             "description": "Stage testing environment"
         }
     ],
@@ -669,7 +669,7 @@
                         "description": "Local development environment"
                     },
                     {
-                        "url": "https://test.mjamsek.com",
+                        "url": "https://api.pinger.group",
                         "description": "Stage testing environment"
                     }
                 ],
@@ -712,7 +712,7 @@
                         "description": "Local development environment"
                     },
                     {
-                        "url": "https://test.mjamsek.com",
+                        "url": "https://api.pinger.group",
                         "description": "Stage testing environment"
                     }
                 ],
