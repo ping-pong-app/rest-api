@@ -559,7 +559,17 @@
                         }
                     },
                     "409": {
-                        "description": "Invitation for the user already exists",
+                        "description": "Invitation for the user already exists. Also thrown when user tries to invite himself.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error retrieving users from Firebase. Most often, problem is in incorrect email format.",
                         "content": {
                             "application/json": {
                                 "schema": {
