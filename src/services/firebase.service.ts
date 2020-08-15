@@ -5,7 +5,7 @@ import Message = admin.messaging.Message;
 import Firestore = admin.firestore.Firestore;
 
 import { FirebaseConfig } from "../config/firebase.config";
-import { BadRequestError, Optional } from "../lib";
+import { BadRequestError, InternalServerError, Optional } from "../lib";
 import { Logger } from "./logger";
 
 
@@ -35,7 +35,11 @@ export class FirebaseService {
         try {
             return await FirebaseConfig.getAuth().getUserByEmail(email);
         } catch (err) {
-            throw new BadRequestError("Error retrieving user! Verify email is in correct format.");
+            if (err.code && err.code === "auth/invalid-email") {
+                throw new BadRequestError(err.message);
+            }
+            Logger.error(err.message);
+            throw new InternalServerError("Unknown error!");
         }
     }
     
