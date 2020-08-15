@@ -32,7 +32,11 @@ export class FirebaseService {
         if (!email) {
             throw new BadRequestError();
         }
-        return await FirebaseConfig.getAuth().getUserByEmail(email);
+        try {
+            return await FirebaseConfig.getAuth().getUserByEmail(email);
+        } catch (err) {
+            throw new BadRequestError("Error retrieving user! Verify email is in correct format.");
+        }
     }
     
     public static async getUserInfo(userId: string): Promise<UserRecord> {

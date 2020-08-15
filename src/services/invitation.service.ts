@@ -49,6 +49,10 @@ export class InvitationService {
     
             const user = await FirebaseService.checkIfUserExists(invitation.email);
             
+            if (user.uid === userId) {
+                throw new ConflictError("Cannot invite self!");
+            }
+            
             const existingInvitation = await FirebaseService.getDatabase()
                 .collection(InvitationEntity.TABLE_NAME)
                 .where("userId", "==", user.uid)
