@@ -401,9 +401,30 @@
                         }
                     }
                 }
+            },
+            "get": {
+                "tags": ["ping"],
+                "summary": "Returns past pings",
+                "description": "Returns pings belonging to groups, user is a member of.",
+                "operationId": "getPings",
+                "responses": {
+                    "200": {
+                        "description": "Returns list of pings",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Ping"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
-        "/ping/list/{id}": {
+        "/ping/response/{id}": {
             "get": {
                 "tags": ["ping"],
                 "summary": "Get list of pings",

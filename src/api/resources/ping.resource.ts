@@ -3,6 +3,16 @@ import { Ping, PingResponse, Rest } from "../../lib";
 import { PingService } from "../../services";
 import { getTokenPayload } from "./common";
 
+export const getPings = async (req: Request, res: Response) => {
+    const payload = getTokenPayload(res);
+    const userId = payload.uid;
+    
+    const pings = await PingService.getPings(userId);
+    res.status(Rest.STATUS_OK)
+        .header(Rest.X_TOTAL_COUNT, pings.count.toString(10))
+        .json(pings);
+};
+
 export const getPingResponses = async (req: Request, res: Response) => {
     const payload = getTokenPayload(res);
     const userId = payload.uid;

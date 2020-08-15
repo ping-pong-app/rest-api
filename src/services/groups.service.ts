@@ -6,8 +6,7 @@ import {
     EntityList,
     Group,
     GroupMembership,
-    NotFoundError,
-    QueryParameters
+    NotFoundError
 } from "../lib";
 import { GroupsMapper } from "./mappers/groups.mapper";
 import { Validator } from "./validator";
@@ -19,7 +18,7 @@ import { DatabaseUtil } from "./utils/database.util";
 
 export class GroupsService {
     
-    public static async findAll(queryParams: QueryParameters, userId: string): Promise<EntityList<Group>> {
+    public static async findAll(userId: string): Promise<EntityList<Group>> {
         const groupIds = await GroupsService.getGroupsUserBelongsTo(userId);
         
         if (groupIds.length > 0) {

@@ -1,4 +1,4 @@
-import { EntityIdentifier, NotFoundError, Ping, PingAggregated, PingResponse } from "../lib";
+import { EntityIdentifier, EntityList, NotFoundError, Ping, PingAggregated, PingResponse } from "../lib";
 import { FirebaseService } from "./firebase.service";
 import { GroupsService } from "./groups.service";
 import { Validator } from "./validator";
@@ -16,6 +16,22 @@ export class PingService {
         console.log(`Initializing Pings... Cleaning old pings`);
         await PingService.cleanupOldPings();
         console.log(`Pings Initialized!`);
+    }
+    
+    public static async getPings(userId: string): Promise<EntityList<Ping>> {
+        const userGroups = await GroupsService.findAll(userId);
+        const groupIds = userGroups.entities.map(entity => entity.id);
+        
+        const pingsRef = await FirebaseService.getDatabase()
+            .collection(PingEntity.TABLE_NAME)
+            .where("groupId", "in", groupIds)
+            .get();
+        
+        const pings = pingsRef.docs.map(pingEntity => {
+            return PingMapper.fromEntity(pingEntity);
+        });
+        
+        return new EntityList(pings, pings.length);
     }
     
     public static async getPingResponses(pingId: string, userId: string): Promise<PingAggregated> {

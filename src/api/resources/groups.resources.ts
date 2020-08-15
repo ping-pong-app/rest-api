@@ -1,19 +1,14 @@
 import { Request, Response } from "express";
 import { GroupsService } from "../../services";
-import { Group, QueryBuilder, RequestQuery, Rest } from "../../lib";
+import { Group, Rest } from "../../lib";
 import { getTokenPayload } from "./common";
 
 
 export const getGroups = async (req: Request, res: Response) => {
-    const queryParams = QueryBuilder
-        .newBuilder()
-        .buildQuery(req.query as RequestQuery)
-        .build();
-    
     const payload = getTokenPayload(res);
-    
     const userId = payload.uid;
-    const entityList = await GroupsService.findAll(queryParams, userId);
+    
+    const entityList = await GroupsService.findAll(userId);
     
     res.status(Rest.STATUS_OK)
         .header(Rest.X_TOTAL_COUNT, entityList.count.toString(10))

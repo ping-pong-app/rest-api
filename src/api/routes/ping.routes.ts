@@ -1,11 +1,11 @@
 import { Route } from "../../config";
 import { authenticateUser } from "../middlewares";
-import { getPingResponses, handlePingResponse, performPing } from "../resources/ping.resource";
+import { getPingResponses, getPings, handlePingResponse, performPing } from "../resources/ping.resource";
 
 
 export const routes: Route[] = [
     {
-        path: "/v1/ping/list/:id",
+        path: "/v1/ping/response/:id",
         method: "get",
         handler: [
             authenticateUser,
@@ -18,6 +18,14 @@ export const routes: Route[] = [
         handler: [
             authenticateUser,
             performPing
+        ]
+    },
+    {
+        path: "/v1/ping",
+        method: "get",
+        handler: [
+            authenticateUser,
+            getPings
         ]
     },
     {
