@@ -87,7 +87,7 @@ export class PingService {
                 .collection(PingEntity.TABLE_NAME)
                 .add(entity.raw());
             
-            const username = UserService.getUserDisplayName(userId);
+            const username = await UserService.getUserDisplayName(userId);
             
             const topic = `PING.${group.id}`;
             const data = {
