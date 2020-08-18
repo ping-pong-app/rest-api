@@ -600,8 +600,15 @@
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "Invitation accepted"
+                    "200": {
+                        "description": "Invitation accepted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Group"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Invitation not found",
