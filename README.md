@@ -1,5 +1,5 @@
 # Ping App REST API
-![Travis (.org)](https://img.shields.io/travis/ping-pong-app/rest-api)
+[![Travis (.org)](https://img.shields.io/travis/ping-pong-app/rest-api)](https://travis-ci.org/github/ping-pong-app/rest-api)
 > REST API for Ping App
 
 ## Usage
