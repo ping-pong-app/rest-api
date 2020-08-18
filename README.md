@@ -30,7 +30,7 @@ Message structure:
 {
     "pingId": "ping instance id",
     "username":  "username of pinger",
-    "userId",: "id of pinger",
+    "userId": "id of pinger",
     "groupId": "id of group being pinged",
     "groupName": "name of group being pinged"
 }
@@ -75,6 +75,7 @@ Subscription on topic `INVITE.GROUP.{groupId}`
 Message structure:
 ```json
 {
-    "groupId": "id of group being invited to"
+    "groupId": "id of group being invited to",
+    "groupName": "name of group being invited to"
 }
 ```

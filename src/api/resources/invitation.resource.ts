@@ -40,9 +40,9 @@ export const acceptInvite = async (req: Request, res: Response) => {
     const userId = payload.uid;
     const invitationId = req.params.id;
     
-    await InvitationService.acceptInvite(invitationId, userId);
+    const joinedGroup = await InvitationService.acceptInvite(invitationId, userId);
     
-    res.status(Rest.STATUS_NO_CONTENT).send();
+    res.status(Rest.STATUS_NO_CONTENT).json(joinedGroup);
 };
 
 export const rejectInvite = async (req: Request, res: Response) => {

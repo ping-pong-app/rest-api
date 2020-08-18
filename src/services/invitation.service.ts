@@ -1,9 +1,10 @@
-import { NotFoundError, Invitation, EntityList, EntityIdentifier, ConflictError } from "../lib";
-import { InvitationEntity } from "../persistence";
+import { NotFoundError, Invitation, EntityList, EntityIdentifier, ConflictError, Group } from "../lib";
+import { GroupEntity, InvitationEntity } from "../persistence";
 import { GroupsService } from "./groups.service";
 import { FirebaseService } from "./firebase.service";
 import { InvitationMapper } from "./mappers/invitation.mapper";
 import { Validator } from "./validator";
+import { GroupsMapper } from "./mappers/groups.mapper";
 
 
 export class InvitationService {
@@ -89,7 +90,7 @@ export class InvitationService {
         }
     }
     
-    public static async acceptInvite(invitationId: string, userId: string) {
+    public static async acceptInvite(invitationId: string, userId: string): Promise<Group> {
         const invitation = await FirebaseService.getDatabase()
             .collection(InvitationEntity.TABLE_NAME)
             .doc(invitationId)
@@ -104,11 +105,19 @@ export class InvitationService {
                 .doc(invitation.id)
                 .delete();
             
+            const group = await FirebaseService.getDatabase()
+                .collection(GroupEntity.TABLE_NAME)
+                .doc(invitation.get("groupId"))
+                .get();
+            
             const topic = `INVITE.GROUP.${invitation.get("groupId")}`;
             const data = {
                 groupId: invitation.get("groupId"),
+                groupName: group.get("name")
             };
             await FirebaseService.sendCloudMessage(topic, data);
+            
+            return GroupsMapper.fromEntity(group);
             
         } else {
             throw new NotFoundError("Invitation not found!");
