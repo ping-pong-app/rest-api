@@ -10,6 +10,7 @@ export { Logger } from "./logger";
 export { GroupsMapper } from "./mappers/groups.mapper";
 export { InvitationMapper } from "./mappers/invitation.mapper";
 export { PingMapper } from "./mappers/ping.mapper";
+export { UserMapper } from "./mappers/user.mapper";
 
 export {
     getNHoursBack,

@@ -1,25 +1,63 @@
-import { NotFoundError, Invitation, EntityList, EntityIdentifier, ConflictError, Group } from "../lib";
+import {
+    ConflictError,
+    EntityIdentifier,
+    EntityList,
+    ExtendedInvitation,
+    Group,
+    Invitation,
+    NotFoundError,
+    User
+} from "../lib";
 import { GroupEntity, InvitationEntity } from "../persistence";
 import { GroupsService } from "./groups.service";
 import { FirebaseService } from "./firebase.service";
 import { InvitationMapper } from "./mappers/invitation.mapper";
 import { Validator } from "./validator";
 import { GroupsMapper } from "./mappers/groups.mapper";
+import { UserMapper } from "./mappers/user.mapper";
 
 
 export class InvitationService {
     
-    public static async getUserInvites(userId: string): Promise<EntityList<Invitation>> {
+    public static async getUserInvites(userId: string): Promise<EntityList<ExtendedInvitation>> {
+        // Retrieve list of invitations
         const invitations = await FirebaseService.getDatabase()
             .collection(InvitationEntity.TABLE_NAME)
             .where("userId", "==", userId)
             .get();
         
+        // Get group ids from it
+        const groupIds = invitations.docs.map(entity => {
+            return FirebaseService.getDatabase().doc("groups/" + entity.get("groupId"));
+        });
+        
+        // Retrieve groups
+        const groupEntities = await FirebaseService.getDatabase()
+            .getAll(...groupIds);
+        
+        // Map groups to dto
+        const groups = groupEntities.map(groupEntity => {
+            return GroupsMapper.fromEntity(groupEntity);
+        });
+        
+        // Retrieve owner ids from groups
+        const userIds = groups.map(group => {
+            return group.ownerId;
+        });
+        
+        // Retrieve users from firebase auth
+        const users = (await FirebaseService.getUsersInfo(userIds)).map(user => {
+            return UserMapper.fromRecord(user);
+        });
+        
+        // Map invites to dto
         const invites = invitations.docs.map(entity => {
             return InvitationMapper.fromEntity(entity);
         });
         
-        return new EntityList<Invitation>(invites, invites.length);
+        const extendedInvites = await InvitationService.mergeData(invites, users, groups);
+        
+        return new EntityList<ExtendedInvitation>(extendedInvites, extendedInvites.length);
     }
     
     public static async getGroupInvites(ownerId: string, groupId: string): Promise<EntityList<Invitation>> {
@@ -156,6 +194,30 @@ export class InvitationService {
         } else {
             throw new NotFoundError("Invitation not found!");
         }
+    }
+    
+    private static async mergeData(invitations: Invitation[], users: User[], groups: Group[]): Promise<ExtendedInvitation[]> {
+        
+        type Identifier = Partial<{ id: string }>;
+        
+        const buildMap = (collection: Identifier[]) => {
+            const map: { [key: string]: Identifier } = {};
+            collection.forEach(elem => {
+                map[elem.id || ""] = elem;
+            });
+            
+            return map;
+        };
+        
+        const groupsMap = buildMap(groups);
+        const usersMap = buildMap(users);
+        
+        return invitations.map(invitation => {
+            const extended = Object.assign(new ExtendedInvitation(), invitation);
+            extended.group = ((groupsMap as any)[invitation.groupId] as Group);
+            extended.user = ((usersMap as any)[extended.group.ownerId] as User);
+            return extended;
+        });
     }
     
 }

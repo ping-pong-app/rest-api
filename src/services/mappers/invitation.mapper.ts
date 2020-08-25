@@ -2,7 +2,7 @@ import admin from "firebase-admin";
 import DocumentSnapshot = admin.firestore.DocumentSnapshot;
 import UserRecord = admin.auth.UserRecord;
 
-import { GroupMembership, Invitation } from "../../lib";
+import { ExtendedInvitation, GroupMembership, Invitation, User } from "../../lib";
 
 export class InvitationMapper {
     
@@ -12,6 +12,14 @@ export class InvitationMapper {
         invitation.userId = entity.get("userId");
         invitation.groupId = entity.get("groupId");
         return invitation;
+    }
+    
+    public static fromEntityExtended(entity: DocumentSnapshot): ExtendedInvitation {
+        const invite = new ExtendedInvitation();
+        invite.id = entity.id;
+        invite.groupId = entity.get("userId");
+        invite.groupId = entity.get("groupId");
+        return invite;
     }
     
     public static fromUserRecords(records: UserRecord[], groupId: string): GroupMembership[] {

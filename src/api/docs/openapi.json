@@ -487,7 +487,10 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Invitation"
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ExtendedInvitation"
+                                }
                             }
                         }
                     }
@@ -833,6 +836,23 @@
                     }
                 }
             },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "displayName": {
+                        "type": "string"
+                    },
+                    "photoUrl": {
+                        "type": "string"
+                    }
+                }
+            },
             "Invitation": {
                 "type": "object",
                 "properties": {
@@ -849,6 +869,20 @@
                     "email": {
                         "type": "string",
                         "nullable": true
+                    }
+                }
+            },
+            "ExtendedInvitation": {
+                "type": "object",
+                "allOf": [{
+                    "$ref": "#/components/schemas/Invitation"
+                }],
+                "properties": {
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "group": {
+                        "$ref": "#/components/schemas/Group"
                     }
                 }
             },
