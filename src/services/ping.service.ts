@@ -126,7 +126,7 @@ export class PingService {
                 .collection(PingResponseEntity.TABLE_NAME)
                 .add(responseEntity.raw());
             
-            const username = UserService.getUserDisplayName(pingResponse.userId);
+            const username = await UserService.getUserDisplayName(pingResponse.userId);
             const group = await GroupsService.find(pingRef.get("groupId"), pingResponse.userId);
             
             const topic = `PING.REPLY.${group.id}`;
