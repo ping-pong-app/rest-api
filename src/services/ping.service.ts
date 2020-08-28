@@ -139,6 +139,8 @@ export class PingService {
                 response: pingResponse.response
             };
             
+            Logger.debug("Ping response cloud message %s", JSON.stringify(data));
+            
             await FirebaseService.sendCloudMessage(topic, data);
             
             return new EntityIdentifier(savedEntity.id);
