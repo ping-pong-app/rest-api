@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Ping, PingResponse, Rest } from "../../lib";
-import { PingService } from "../../services";
+import { Logger, PingService } from "../../services";
 import { getTokenPayload } from "./common";
 
 export const getPings = async (req: Request, res: Response) => {
@@ -38,6 +38,8 @@ export const handlePingResponse = async (req: Request<{}, {}, PingResponse, {}>,
     const body = req.body;
     
     body.userId = userId;
+    
+    Logger.info("REQ: %s", JSON.stringify(body));
     
     const pingResponseIdentifier = await PingService.handlePingResponse(body);
     res.status(Rest.STATUS_CREATED).json(pingResponseIdentifier);
