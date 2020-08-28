@@ -131,7 +131,7 @@ export class PingService {
             
             const topic = `PING.REPLY.${group.id}`;
             const data = {
-                pingId: pingResponse.pingId,
+                pingId: pingRef.id,
                 userId: pingResponse.userId,
                 username,
                 groupId: group.id,

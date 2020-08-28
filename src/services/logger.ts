@@ -13,27 +13,27 @@ export class Logger {
     }
     
     public static fatal(message: string, ...args: any[]) {
-        LogConfig.getInstance().fatal(message, args);
+        LogConfig.getInstance().fatal(message, ...args);
     }
     
     public static error(message: string, ...args: any[]) {
-        LogConfig.getInstance().error(message, args);
+        LogConfig.getInstance().error(message, ...args);
     }
     
     public static warn(message: string, ...args: any[]) {
-        LogConfig.getInstance().warn(message, args);
+        LogConfig.getInstance().warn(message, ...args);
     }
     
     public static info(message: string, ...args: any[]) {
-        LogConfig.getInstance().info(message, args);
+        LogConfig.getInstance().info(message, ...args);
     }
     
     public static debug(message: string, ...args: any[]) {
-        LogConfig.getInstance().debug(message, args);
+        LogConfig.getInstance().debug(message, ...args);
     }
     
     public static trace(message: string, ...args: any[]) {
-        LogConfig.getInstance().trace(message, args);
+        LogConfig.getInstance().trace(message, ...args);
     }
     
 }
