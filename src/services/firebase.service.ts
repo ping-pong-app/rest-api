@@ -5,7 +5,7 @@ import Message = admin.messaging.Message;
 import Firestore = admin.firestore.Firestore;
 
 import { FirebaseConfig } from "../config/firebase.config";
-import { BadRequestError, InternalServerError, Optional } from "../lib";
+import { BadRequestError, InternalServerError, Optional, ValidationError } from "../lib";
 import { Logger } from "./logger";
 
 
@@ -62,9 +62,19 @@ export class FirebaseService {
             data.timestamp = new Date().toISOString();
         }
         
+        FirebaseService.validateCloudMessage(data);
+        
         const message: Message = {topic, data};
         await FirebaseConfig.getMessaging().send(message);
         Logger.debug("Message sent to Firebase Cloud Messaging!");
+    }
+    
+    private static validateCloudMessage(data: any) {
+        Object.keys(data).forEach(key => {
+            if (typeof data[key] !== "string") {
+                throw new ValidationError("Validation failed! Invalid Cloud message format. Only strings are allowed.");
+            }
+        });
     }
     
 }
