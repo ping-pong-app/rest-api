@@ -102,7 +102,7 @@ export class PingService {
             
             await FirebaseService.sendCloudMessage(topic, data);
             
-            PingService.schedulePingCleanup(pingRef.id);
+            // PingService.schedulePingCleanup(pingRef.id);
             
             return new EntityIdentifier(pingRef.id);
         } else {
@@ -116,18 +116,31 @@ export class PingService {
         Validator.assertNotBlank(pingResponse.pingId, "pingId", "PingResponse");
         Validator.assertNotBlank(pingResponse.response, "response", "PingResponse");
         
-        const pingRef = await FirebaseService.getDatabase().collection(PingEntity.TABLE_NAME).doc(pingResponse.pingId).get();
+        Logger.debug("Handling ping response...");
+        
+        const pingRef = await FirebaseService.getDatabase()
+            .collection(PingEntity.TABLE_NAME)
+            .doc(pingResponse.pingId)
+            .get();
+    
+        Logger.debug("Retrieved reference to ping %s", pingResponse.pingId);
         
         if (pingRef.exists) {
+    
+            Logger.debug("Ping with id %s exists! Processing response...", pingResponse.pingId);
             
             const responseEntity = PingMapper.responseToEntity(pingResponse);
             
             const savedEntity = await FirebaseService.getDatabase()
                 .collection(PingResponseEntity.TABLE_NAME)
                 .add(responseEntity.raw());
+    
+            Logger.debug("Created ping response entity %o and id %s", responseEntity.raw(), savedEntity.id);
             
             const username = await UserService.getUserDisplayName(pingResponse.userId);
             const group = await GroupsService.find(pingRef.get("groupId"), pingResponse.userId);
+            
+            Logger.debug("Retrived username %s and group %s (%s)", username, group.name, group.id);
             
             const topic = `PING.REPLY.${group.id}`;
             const data = {
@@ -138,14 +151,17 @@ export class PingService {
                 groupName: group.name,
                 response: pingResponse.response
             };
-            
-            Logger.debug("Ping response cloud message %s", JSON.stringify(data));
+    
+            Logger.debug("Sending FCM data: %s", JSON.stringify(data));
             
             await FirebaseService.sendCloudMessage(topic, data);
+    
+            Logger.debug("FCM message sent!", JSON.stringify(data));
             
             return new EntityIdentifier(savedEntity.id);
             
         } else {
+            Logger.error(`Ping with id %s doesnt exist`, pingResponse.pingId);
             throw new NotFoundError("Ping doesn't exists!");
         }
     }

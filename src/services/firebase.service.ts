@@ -65,8 +65,13 @@ export class FirebaseService {
         FirebaseService.validateCloudMessage(data);
         
         const message: Message = {topic, data};
-        await FirebaseConfig.getMessaging().send(message);
-        Logger.debug("Message sent to Firebase Cloud Messaging!");
+        try {
+            await FirebaseConfig.getMessaging().send(message);
+            Logger.debug("Message sent to Firebase Cloud Messaging!");
+        } catch (err) {
+            Logger.error("Error sending to FCM! %s", JSON.stringify(err));
+            throw new InternalServerError("Error sending to FCM!");
+        }
     }
     
     private static validateCloudMessage(data: any) {
