@@ -26,6 +26,10 @@ export class InvitationService {
             .where("userId", "==", userId)
             .get();
         
+        if (invitations.size === 0) {
+            return new EntityList<ExtendedInvitation>([], 0);
+        }
+        
         // Get group ids from it
         const groupIds = invitations.docs.map(entity => {
             return FirebaseService.getDatabase().doc("groups/" + entity.get("groupId"));
