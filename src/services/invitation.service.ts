@@ -72,6 +72,10 @@ export class InvitationService {
                 .where("groupId", "==", groupId)
                 .get();
             
+            if (invitations.size === 0) {
+                return new EntityList<Invitation>([], 0);
+            }
+            
             const invites = invitations.docs.map(entity => {
                 return InvitationMapper.fromEntity(entity);
             });

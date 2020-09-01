@@ -20,6 +20,11 @@ export class PingService {
     
     public static async getPings(userId: string): Promise<EntityList<Ping>> {
         const userGroups = await GroupsService.findAll(userId);
+        
+        if (userGroups.count === 0) {
+            return new EntityList<Ping>([], 0);
+        }
+        
         const groupIds = userGroups.entities.map(entity => entity.id);
         
         const pingsRef = await FirebaseService.getDatabase()
