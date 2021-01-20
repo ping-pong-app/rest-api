@@ -2,6 +2,7 @@ import admin from "firebase-admin";
 import DecodedIdToken = admin.auth.DecodedIdToken;
 import UserRecord = admin.auth.UserRecord;
 import Message = admin.messaging.Message;
+import AndroidConfig = admin.messaging.AndroidConfig;
 import Firestore = admin.firestore.Firestore;
 
 import { FirebaseConfig } from "../config/firebase.config";
@@ -63,8 +64,14 @@ export class FirebaseService {
         }
         
         FirebaseService.validateCloudMessage(data);
+    
+        const androidConfig: AndroidConfig = {
+            priority: "high",
+            ttl: 600000
+        };
         
-        const message: Message = {topic, data};
+        const message: Message = {topic, data, android: androidConfig};
+
         try {
             await FirebaseConfig.getMessaging().send(message);
             Logger.debug("Message sent to Firebase Cloud Messaging!");

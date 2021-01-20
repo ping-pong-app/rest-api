@@ -1,7 +1,6 @@
+import { BaseEntity } from "./base.entity";
 import admin from "firebase-admin";
 import FieldValue = admin.firestore.FieldValue;
-
-import { BaseEntity } from "./base.entity";
 
 
 export class GroupEntity implements BaseEntity {

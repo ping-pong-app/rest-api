@@ -3,6 +3,7 @@ import DocumentSnapshot = admin.firestore.DocumentSnapshot;
 import Timestamp = admin.firestore.Timestamp;
 import { Ping, PingResponse } from "../../lib";
 import { PingEntity, PingResponseEntity } from "../../persistence";
+import FieldValue = admin.firestore.FieldValue;
 
 export class PingMapper {
     
@@ -10,6 +11,8 @@ export class PingMapper {
         const entity = new PingEntity();
         entity.pingerId = ping.pingerId;
         entity.groupId = ping.groupId;
+        entity.createdAt = FieldValue.serverTimestamp();
+        entity.updatedAt = FieldValue.serverTimestamp();
         return entity;
     }
     
